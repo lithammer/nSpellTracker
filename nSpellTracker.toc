@@ -14,7 +14,7 @@ classes\priest.lua
 classes\rogue.lua
 classes\shaman.lua
 classes\warlock.lua
-classes\warrio.lua
+classes\warrior.lua
 classes\everyone.lua
 
 config.lua
