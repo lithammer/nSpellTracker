@@ -81,10 +81,10 @@ addon.buffs = {
 }
 
 addon.debuffs = {
-	weakenedArmor = {770, 8647, 7386, 113746},
-	physicalVulnerability = {81328, 51160, 111529, 86346, 81326},
+	weakenedArmor = 113746,
+	physicalVulnerability = 81326,
 	magicVulnerability = {93068, 1490},
-	weakenedBlows = {81132, 77758, 106830, 53595, 121253, 6343, 115798},
+	weakenedBlows = 115798,
 	slowCasting = {73975, 5760, 109466},
-	mortalWounds = {12294, 100130, 8680, 82654, 115804}
+	mortalWounds = 115804
 }
