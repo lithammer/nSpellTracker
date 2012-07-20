@@ -174,10 +174,10 @@ local function SlashCmd(cmd)
 	end
 end
 
-SlashCmdList['rfilter'] = SlashCmd;
-SLASH_rfilter1 = '/rfilter';
-SLASH_rfilter2 = '/rf';
-print('|c0033AAFF\/rfilter|r or |c0033AAFF\/rf|r to lock/unlock the frames.')
+SlashCmdList['nspelltracker'] = SlashCmd;
+SLASH_rfilter1 = '/nspelltracker';
+SLASH_rfilter2 = '/nst';
+print('|c0033AAFF\/nspelltracker|r or |c0033AAFF\/nst|r to lock/unlock the frames.')
 
 local CreateIcon = function(f, t)
 	local name, rank, icon, powerCost, isFunnel, powerType, castingTime, minRange, maxRange = GetSpellInfo(type(f.spellid) == 'table' and f.spellid[1] or f.spellid)
