@@ -3,30 +3,28 @@ if select(2, UnitClass('player')) ~= 'WARRIOR' then return end
 local _, addon = ...
 local playerName, _ = UnitName('player')
 
-addon:Debuff({
-	spellid = 172, -- Corruption
-	size = 36,
-	pos = { a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -150, y = 0},
-	unit = 'target',
-	validate_unit = true,
-	hide_ooc = true,
-	is_mine = true,
-	desaturate = true,
-	move_ingame = false,
-})
+-----------------------------------------------------------------------------
 
 addon:Debuff({
-	spellid = 980, -- Agony
+	spellid = addon.debuffs.mortalWounds, -- Mortal Wounds debuff
 	pos = { a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -150, y = -42},
 	unit = 'target',
-	validate_unit = true,
-	hide_ooc = true,
-	is_mine = true,
+	hide_ooc = false,
 	move_ingame = false,
+	alpha = {
+		found = {
+			frame = 1,
+			icon = 1,
+		},
+		not_found = {
+			frame = 0.4,
+			icon = 0.6,
+		},
+	},
 })
 
 addon:Buff({
-	spellid = 109773,
+	spellid = 6673,
 	pos = { a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = 150, y = 0},
 })
 
