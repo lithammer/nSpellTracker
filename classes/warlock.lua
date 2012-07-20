@@ -4,6 +4,14 @@ local _, addon = ...
 local playerName, _ = UnitName('player')
 
 addon:Debuff({
+	spellId = 30108, -- Unstable Affliction
+	pos = { a1 = 'CENTER', a3 = 'CENTER', af = 'UIParent', x = -150, y = 42},
+	unit = 'target',
+	is_mine = true,
+	move_ingame = false,
+})
+
+addon:Debuff({
 	spellid = 172, -- Corruption
 	size = 36,
 	pos = { a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -150, y = 0},
