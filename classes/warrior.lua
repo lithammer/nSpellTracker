@@ -1,4 +1,4 @@
-if select(2, UnitClass ~= 'WARRIOR') then return end
+if select(2, UnitClass('player')) ~= 'WARRIOR' then return end
 
 local _, addon = ...
 local playerName, _ = UnitName('player')
