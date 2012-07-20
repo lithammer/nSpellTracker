@@ -1,0 +1,3 @@
+local _, addon = ...
+
+-- For PvP and PvE buffs and debuffs
