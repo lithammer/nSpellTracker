@@ -58,8 +58,26 @@ local ApplySize = function(i)
 	i.count:SetPoint('TOPRIGHT', 0, 0)
 end
 
+local IsCurrentSpec = function(spec)
+	if type(spec) == 'table' then
+		for _, v in pairs(spec) do
+			if v == GetSpecialization() then
+				return true
+			end
+		end
+
+		return false
+	end
+
+	return spec == GetSpecialization()
+end
+
+local GetSpellId = function(spellId)
+	return type(spellId) == 'table' and spellId[1] or spellId
+end
+
 -- Generate the frame name if a global one is needed
-local MakeFrameName = function(f, type)
+local MakeFrameName = function(f, t)
 	if not f.move_ingame then
 		return nil
 	end
@@ -67,12 +85,12 @@ local MakeFrameName = function(f, type)
 	local _, class = UnitClass('player')
 	local spec = f.spec or 'None'
 
-	return 'nSpellTracker'..type..'Frame'..f.spellid..'Spec'..spec..class
+	return 'nSpellTracker'..t..'Frame'..GetSpellId(f.spellid)..'Spec'..spec..class
 end
 
 local UnlockFrame = function(i)
 	-- Only show icons that are visible for the current spec
-	if i.spec and i.spec ~= GetSpecialization() then
+	if i.spec and not IsCurrentSpec(i.spec) then
 		return
 	end
 
@@ -128,13 +146,13 @@ local ApplyMoveFunctionality = function(f, i)
 		return
 	end
 
-	i:SetHitRectInsets(-5,-5,-5,-5)
+	i:SetHitRectInsets(-5, -5, -5, -5)
 	i:SetClampedToScreen(true)
 	i:SetMovable(true)
 	i:SetResizable(true)
 	i:SetUserPlaced(true)
 
-	local t = i:CreateTexture(nil,'OVERLAY',nil,6)
+	local t = i:CreateTexture(nil, 'OVERLAY', nil, 6)
 	t:SetAllPoints(i)
 	t:SetTexture(0,1,0)
 	t:SetAlpha(0)
@@ -179,10 +197,10 @@ SLASH_nspelltracker1 = '/nspelltracker';
 SLASH_nspelltracker2 = '/nst';
 print('|c0033AAFF\/nspelltracker|r or |c0033AAFF\/nst|r to lock/unlock the frames.')
 
-local CreateIcon = function(f, t)
-	local name, rank, icon, powerCost, isFunnel, powerType, castingTime, minRange, maxRange = GetSpellInfo(type(f.spellid) == 'table' and f.spellid[1] or f.spellid)
+local CreateIcon = function(f, type)
+	local name, rank, icon, powerCost, isFunnel, powerType, castingTime, minRange, maxRange = GetSpellInfo(GetSpellId(f.spellid))
 
-	local i = CreateFrame('Frame', MakeFrameName(f, t), UIParent, 'SecureHandlerStateTemplate')
+	local i = CreateFrame('Frame', MakeFrameName(f, type), UIParent, 'SecureHandlerStateTemplate')
 	i:SetSize(f.size, f.size)
 	i:SetPoint(f.pos.a1, f.pos.af, f.pos.a2, f.pos.x, f.pos.y)
 	i.minsize = f.size
@@ -247,7 +265,7 @@ local CheckAura = function(f, spellid, filter)
 		return
 	end
 
-	if f.spec and f.spec ~= GetSpecialization() then
+	if f.spec and not IsCurrentSpec(f.spec) then
 		f.iconframe:SetAlpha(0)
 		return
 	end
@@ -258,7 +276,7 @@ local CheckAura = function(f, spellid, filter)
 	end
 
 	if not InCombatLockdown() and f.hide_ooc then
-		f.iconframe:SetAlpha(0)
+		securecall('UIFrameFadeOut', f.iconframe, 0.25, f.iconframe:GetAlpha(), 0)
 		return
 	end
 
@@ -347,18 +365,18 @@ local CheckCooldown = function(f)
 		return
 	end
 
-	if f.spec and f.spec ~= GetSpecialization() then
+	if f.spec and not IsCurrentSpec(f.spec) then
 		f.iconframe:SetAlpha(0)
 		return
 	end
 
 	if not InCombatLockdown() and f.hide_ooc then
-		f.iconframe:SetAlpha(0)
+		securecall('UIFrameFadeOut', f.iconframe, 0.25, f.iconframe:GetAlpha(), 0)
 		return
 	end
 
 	if f.name and f.spellid then
-		local start, duration, enable = GetSpellCooldown(type(f.spellid) == 'table' and f.spellid[1] or f.spellid) -- Just a precaution to check to table
+		local start, duration, enable = GetSpellCooldown(GetSpellId(f.spellid))
 
 		if start and duration then
 			local now = GetTime()
@@ -406,11 +424,9 @@ local SearchAuras = function(list, filter)
 			return
 		end
 
-		--if f.spell_list and f.spell_list[1] then
 		if type(f.spellid) == 'table' then
 			f.auraFound = false
 
-			--for k, spellid in ipairs(f.spell_list) do
 			for k, spellid in ipairs(f.spellid) do
 				if not f.auraFound then
 					CheckAura(f, spellid, filter)
@@ -451,6 +467,7 @@ GenerateIcons(config.BuffList, 'Buff')
 GenerateIcons(config.DebuffList, 'Debuff')
 GenerateIcons(config.CooldownList, 'Cooldown')
 
+--[[
 if count > 0 then
 	--local a = CreateFrame('Frame')
 	local ag = CreateFrame('Frame'):CreateAnimationGroup()
@@ -466,4 +483,17 @@ if count > 0 then
 	end)
 
 	ag:Play()
+end
+]]--
+
+if count > 0 then
+	CreateFrame('Frame'):SetScript('OnUpdate', function(self, elapsed)
+		self.lastUpdate = self.lastUpdate and (self.lastUpdate + elapsed) or 0
+
+		if self.lastUpdate > config.updatetime then
+			SearchAuras(config.BuffList, 'HELPFUL')
+			SearchAuras(config.DebuffList, 'HARMFUL')
+			SearchCooldowns()
+		end
+	end)
 end
