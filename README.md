@@ -1,5 +1,4 @@
-
-# rFilter3
+# nSpellTracker
 
 ```lua
 -- Player spells will have a blue border
@@ -32,19 +31,78 @@ addon:Debuff({
 
 ## Settings
 
-Field | Values | Description
--------- | -------- | 
-spellid (required) | int or {int, int, ...} | The spellid to track this will represent the icon if none is found
-spec   | nil, 1, 2 or 3 | The talent tree you want to track the spell (nil will make it work in any tree)
-visibility_state   | "[combat] show; hide" | Attribute that lets you show/hide the frame on a given state condition. example: "[stance:2] show; hide"
-size | int | The size of the icon
-pos | table | The position of the icon ([www.wowwiki.com/API_Region_SetPoint](http://www.wowwiki.com/API_Region_SetPoint))
-unit | 'player' | UnitID ([www.wowwiki.com/UnitId](http://www.wowwiki.com/UnitId)), the unit that should be tracked
-validate_unit | true/false | Only show the icon if unit is found
-hide_ooc | true/false | Hide icon out of combat
-ismine | true/false | Track if the spell casted is actually MY spell (hide same buffs/debuffs from other players)
-desaturate | true/false | Desaturate the icon if not found
-match_spellid | true/false (optional) | In case you not only match the name but the spell id of the buff/debuff
-move_ingame | true/false (optional) | In case you want to move the frame ingame, the size will be the MINIMUM frame size you can resize to, so adjust the size in case you need lower minimum size ingame
-alpha | {found={frame=1, icon=1}, not_found={frame=0.4, icon=0.6}} | Set the alpha values of your icons (transparency)
-alpha | {cooldown={frame=1, icon=1}, no_cooldown={frame=0.4, icon=0.6}} | Set the alpha values of your icons (transparency)
+```lua
+{
+	-- The talent tree you want to track the spell (nil will make it work in
+	-- any tree).
+	spec = nil,
+
+	-- Attribute that lets you show/hide the frame on a given state condition.
+	-- example: '[stance:2] show; hide'
+	visibility_state = '[combat] show; hide',
+
+	-- The spellid to track this will represent the icon if none is found.
+	spellid = 469,
+
+	-- The size of the icon.
+	size = 26,
+
+	-- The position of the icon (http://www.wowwiki.com/API_Region_SetPoint).
+	pos  = {
+		a1 = 'BOTTOM',
+		a2 = 'BOTTOM',
+		af = 'UIParent',
+		x = 130,
+		y = 107
+	},
+
+	--Unit ID (http://www.wowwiki.com/UnitId), the unit that should be tracked.
+	unit = 'player',
+
+	-- Only show the icon if unit is found.
+	validate_unit = true,
+
+	-- Hide icon out of combat.
+	hide_ooc = true,
+
+	-- Hide if the buff/debuff isn't mine.
+	is_mine = false,
+
+	-- Desaturate the icon if not found.
+	desaturate = true,
+
+	-- In case you not only match the name but the spell id of the buff/debuff.
+	match_spellid = false,
+
+	-- In case you want to move the frame ingame, the size will be the MINIMUM
+	-- frame size you can resize to, so adjust the size in case you need lower
+	-- minimum size ingame.
+	move_ingame = true,
+
+	-- Set the alpha values of your icons (transparency).
+	alpha = {
+		found = {
+			frame = 1,
+			icon = 1,
+		},
+		not_found = {
+			frame = 0.4,
+			icon = 0.6,
+		},
+	},
+}
+```
+### Cooldown specific settings
+
+```lua
+alpha = {
+	cooldown = {
+		frame = 1,
+		icon = 0.6,
+	},
+	no_cooldown = {
+		frame = 1,
+		icon = 1,
+	},
+}
+```
