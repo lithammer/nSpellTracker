@@ -67,7 +67,7 @@ local MakeFrameName = function(f, type)
 	local _, class = UnitClass('player')
 	local spec = f.spec or 'None'
 
-	return 'rFilter3'..type..'Frame'..f.spellid..'Spec'..spec..class
+	return 'nSpellTracker'..type..'Frame'..f.spellid..'Spec'..spec..class
 end
 
 local UnlockFrame = function(i)
@@ -175,8 +175,8 @@ local function SlashCmd(cmd)
 end
 
 SlashCmdList['nspelltracker'] = SlashCmd;
-SLASH_rfilter1 = '/nspelltracker';
-SLASH_rfilter2 = '/nst';
+SLASH_nspelltracker1 = '/nspelltracker';
+SLASH_nspelltracker2 = '/nst';
 print('|c0033AAFF\/nspelltracker|r or |c0033AAFF\/nst|r to lock/unlock the frames.')
 
 local CreateIcon = function(f, t)
@@ -188,12 +188,12 @@ local CreateIcon = function(f, t)
 	i.minsize = f.size
 
 	local glow = i:CreateTexture(nil, 'BACKGROUND', nil, -8)
-	glow:SetTexture('Interface\\AddOns\\rFilter3\\media\\simplesquare_glow')
+	glow:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_glow')
 	glow:SetVertexColor(0, 0, 0, 1)
 
 	local back = i:CreateTexture(nil, 'BACKGROUND',nil,-7)
 	back:SetAllPoints(i)
-	back:SetTexture('Interface\\AddOns\\rFilter3\\media\\d3portrait_back2')
+	back:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\d3portrait_back2')
 
 	local texture = i:CreateTexture(nil, 'BACKGROUND', nil, -6)
 	texture:SetTexture(icon)
@@ -204,7 +204,7 @@ local CreateIcon = function(f, t)
 	end
 
 	local border = i:CreateTexture(nil, 'BACKGROUND', nil, -4)
-	border:SetTexture('Interface\\AddOns\\rFilter3\\media\\simplesquare_roth')
+	border:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_roth')
 	border:SetVertexColor(0.37, 0.3, 0.3, 1)
 	border:SetAllPoints(i)
 
@@ -234,7 +234,6 @@ local CreateIcon = function(f, t)
 	f.name = name
 	f.rank = rank
 	f.texture = icon
-
 end
 
 local CheckAura = function(f, spellid, filter)
