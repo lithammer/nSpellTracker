@@ -29,6 +29,37 @@ addon:Debuff({
 })
 ```
 
+To track multiple spells you just add a table of spell ids like so:
+
+```lua
+addon:Buff({
+	spellid = {172, 234, 2356},
+})
+
+There's also a helper buff/debuff table so that you can easily target
+buff/debuff groups like Mortal Wounds or Spell Power buffs. Just assign
+`spellid` any of the following values:
+
+```
+-- Buffs
+addon.buffs.stats
+addon.buffs.stamina
+addon.buffs.attackPower
+addon.buffs.spellPower
+addon.buffs.haste
+addon.buffs.spellHaste
+addon.buffs.criticalStrike
+addon.buffs.master
+
+-- Debuffs
+addon.debuffs.weakenedArmor
+addon.debuffs.physicalVulnerability
+addon.debuffs.magicVulnerability
+addon.debuffs.weakenedBlows
+addon.debuffs.slowCasting
+addon.debuffs.mortalWounds
+```
+
 ## Settings
 
 ```lua
@@ -80,6 +111,8 @@ addon:Debuff({
 	move_ingame = true,
 
 	-- Set the alpha values of your icons (transparency).
+
+	-- Debuffs and Buffs
 	alpha = {
 		found = {
 			frame = 1,
@@ -90,19 +123,18 @@ addon:Debuff({
 			icon = 0.6,
 		},
 	},
-}
-```
-### Cooldown specific settings
 
-```lua
-alpha = {
-	cooldown = {
-		frame = 1,
-		icon = 0.6,
-	},
-	no_cooldown = {
-		frame = 1,
-		icon = 1,
-	},
+
+	-- Cooldowns
+	alpha = {
+		cooldown = {
+			frame = 1,
+			icon = 0.6,
+		},
+		no_cooldown = {
+			frame = 1,
+			icon = 1,
+		},
+	}
 }
 ```
