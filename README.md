@@ -35,6 +35,7 @@ To track multiple spells you just add a table of spell ids like so:
 addon:Buff({
 	spellid = {172, 234, 2356},
 })
+```
 
 There's also a helper buff/debuff table so that you can easily target
 buff/debuff groups like Mortal Wounds or Spell Power buffs. Just assign
