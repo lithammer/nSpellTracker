@@ -163,14 +163,14 @@ local LockAllFrames = function()
 	end
 end
 
-local isFramesLocked = true
+local framesLocked = true
 local function SlashCmd(cmd)
-	if isFramesLocked then
+	if framesLocked then
 		UnlockAllFrames()
-		isFramesLocked = false
+		framesLocked = false
 	else
 		LockAllFrames()
-		isFramesLocked = true
+		framesLocked = true
 	end
 end
 
