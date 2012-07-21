@@ -54,6 +54,11 @@ local function MergeTables(t1, t2)
     return t1
 end
 
+function addon:Round(num, idp)
+	local mult = 10^(idp or 0)
+	return floor(num * mult + 0.5) / mult
+end
+
 function addon:Debuff(debuff)
 	debuff = MergeTables(GenerateDefault(), debuff)
 	table.insert(self.config.DebuffList, debuff) 
