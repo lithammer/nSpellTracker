@@ -276,7 +276,10 @@ local CheckAura = function(f, spellid, filter)
 	end
 
 	if not InCombatLockdown() and f.hide_ooc then
-		securecall('UIFrameFadeOut', f.iconframe, 0.25, f.iconframe:GetAlpha(), 0)
+		if addon:Round(f.iconframe:GetAlpha(), 1) ~= 0 then
+			securecall('UIFrameFadeOut', f.iconframe, 0.25, f.iconframe:GetAlpha(), 0)
+		end
+		--f.iconframe:SetAlpha(0)
 		return
 	end
 
@@ -371,7 +374,10 @@ local CheckCooldown = function(f)
 	end
 
 	if not InCombatLockdown() and f.hide_ooc then
-		securecall('UIFrameFadeOut', f.iconframe, 0.25, f.iconframe:GetAlpha(), 0)
+		if addon:Round(f.iconframe:GetAlpha(), 1) ~= 0 then
+			securecall('UIFrameFadeOut', f.iconframe, 0.25, f.iconframe:GetAlpha(), 0)
+		end
+		--f.iconframe:SetAlpha(0)
 		return
 	end
 
@@ -467,10 +473,9 @@ GenerateIcons(config.BuffList, 'Buff')
 GenerateIcons(config.DebuffList, 'Debuff')
 GenerateIcons(config.CooldownList, 'Cooldown')
 
---[[
 if count > 0 then
-	--local a = CreateFrame('Frame')
-	local ag = CreateFrame('Frame'):CreateAnimationGroup()
+	local a = CreateFrame('Frame')
+	local ag = a:CreateAnimationGroup()
 	local anim = ag:CreateAnimation()
 
 	anim:SetDuration(config.updatetime)
@@ -484,17 +489,18 @@ if count > 0 then
 
 	ag:Play()
 end
-]]--
 
+--[[
 if count > 0 then
 	CreateFrame('Frame'):SetScript('OnUpdate', function(self, elapsed)
 		self.lastUpdate = self.lastUpdate and (self.lastUpdate + elapsed) or 0
 
 		if self.lastUpdate > config.updatetime then
-			self.lastUpdate = 0
 			SearchAuras(config.BuffList, 'HELPFUL')
 			SearchAuras(config.DebuffList, 'HARMFUL')
 			SearchCooldowns()
+			self.lastUpdate = 0
 		end
 	end)
 end
+]]--
