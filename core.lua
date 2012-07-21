@@ -491,6 +491,7 @@ if count > 0 then
 		self.lastUpdate = self.lastUpdate and (self.lastUpdate + elapsed) or 0
 
 		if self.lastUpdate > config.updatetime then
+			self.lastUpdate = 0
 			SearchAuras(config.BuffList, 'HELPFUL')
 			SearchAuras(config.DebuffList, 'HARMFUL')
 			SearchCooldowns()
