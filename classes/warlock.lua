@@ -8,7 +8,7 @@ local playerName, _ = UnitName('player')
 addon:Debuff({
 	spellid = 30108, -- Unstable Affliction
 	spec = 1,
-	pos = {a1 = 'CENTER', a3 = 'CENTER', af = 'UIParent', x = -150, y = 42},
+	pos = {a1 = 'CENTER', a3 = 'CENTER', af = 'UIParent', x = -210, y = 42},
 	unit = 'target',
 	is_mine = true,
 	move_ingame = false,
@@ -16,7 +16,8 @@ addon:Debuff({
 
 addon:Debuff({
 	spellid = 348, -- Immolate
-	pos = {a1 = 'CENTER', a3 = 'CENTER', af = 'UIParent', x = -150, y = 42},
+	spec = 3,
+	pos = {a1 = 'CENTER', a3 = 'CENTER', af = 'UIParent', x = -210, y = 42},
 	unit = 'target',
 	is_mine = true,
 	move_ingame = true,
@@ -26,7 +27,7 @@ addon:Debuff({
 	spellid = 172, -- Corruption
 	spec = {1, 2},
 	size = 36,
-	pos = {a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -150, y = 0},
+	pos = {a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -210, y = 0},
 	unit = 'target',
 	validate_unit = true,
 	is_mine = true,
@@ -37,7 +38,17 @@ addon:Debuff({
 addon:Debuff({
 	spellid = 980, -- Agony
 	spec = 1,
-	pos = {a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -150, y = -42},
+	pos = {a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -210, y = -42},
+	unit = 'target',
+	validate_unit = true,
+	is_mine = true,
+	move_ingame = false,
+})
+
+addon:Debuff({
+	spellid = 47960, -- Shadowflame
+	spec = 2,
+	pos = {a1 = 'CENTER', a3 = 'CENTER', af = 'UIParent', x = -252, y = 42},
 	unit = 'target',
 	validate_unit = true,
 	is_mine = true,
@@ -46,7 +57,7 @@ addon:Debuff({
 
 addon:Debuff({
 	spellid = addon.debuffs.magicVulnerability,
-	pos = {a1 = 'BOTTOM', a2 = 'BOTTOM', af = 'UIParent', x = 0, y = 200},
+	pos = {a1 = 'BOTTOM', a2 = 'BOTTOM', af = 'UIParent', x = 0, y = 210},
 	unit = 'target',
 })
 
@@ -55,7 +66,7 @@ addon:Debuff({
 --[[
 addon:Buff({
 	spellid = addon.buffs.spellPower,
-	pos = {a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = 150, y = 0},
+	pos = {a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = 210, y = 0},
 })
 ]]--
 
@@ -64,7 +75,15 @@ addon:Buff({
 addon:Cooldown({
 	spellid = 17962, -- Conflagrate
 	spec = 3,
-	pos = {a1 = 'CENTER', a3 = 'CENTER', af = 'UIParent', x = -192, y = 42},
+	pos = {a1 = 'CENTER', a3 = 'CENTER', af = 'UIParent', x = -252, y = 42},
+	move_ingame = false,
+	hide_ooc = true,
+})
+
+addon:Cooldown({
+	spellid = 105174, -- Hand of Gul'dan
+	spec = 2,
+	pos = {a1 = 'CENTER', a3 = 'CENTER', af = 'UIParent', x = -210, y = 42},
 	move_ingame = false,
 	hide_ooc = true,
 })
