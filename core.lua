@@ -8,7 +8,7 @@ local _, addon = ...
 local config = addon.config
 
 -- Global variable gather all frames that can be moved ingame, will be accessed by slash command function later
-local Frames = {}  
+local Frames = {}
 
 local floor = math.floor
 local format = string.format
@@ -198,7 +198,7 @@ SLASH_nspelltracker2 = '/nst';
 print('|c0033AAFF\/nspelltracker|r or |c0033AAFF\/nst|r to lock/unlock the frames.')
 
 local CreateIcon = function(f, type)
-	local name, rank, icon, powerCost, isFunnel, powerType, castingTime, minRange, maxRange = GetSpellInfo(GetSpellId(f.spellid))
+	local name, _, icon, powerCost, isFunnel, powerType, castingTime, minRange, maxRange = GetSpellInfo(GetSpellId(f.spellid))
 
 	local i = CreateFrame('Frame', MakeFrameName(f, type), UIParent, 'SecureHandlerStateTemplate')
 	i:SetSize(f.size, f.size)
@@ -250,7 +250,6 @@ local CreateIcon = function(f, type)
 
 	f.iconframe = i
 	f.name = name
-	f.rank = rank
 	f.texture = icon
 end
 
@@ -279,7 +278,6 @@ local CheckAura = function(f, spellid, filter)
 		if addon:Round(f.iconframe:GetAlpha(), 1) ~= 0 then
 			securecall('UIFrameFadeOut', f.iconframe, 0.25, f.iconframe:GetAlpha(), 0)
 		end
-		--f.iconframe:SetAlpha(0)
 		return
 	end
 
@@ -288,18 +286,15 @@ local CheckAura = function(f, spellid, filter)
 		-- spellid gets overwritten for spell_lists
 		tmp_spellid = spellid
 
-		local name, rank, icon = GetSpellInfo(spellid)
+		local name, _, icon = GetSpellInfo(spellid)
 		if name then
 			f.name = name
-			f.rank = rank
-			f.texture_list = icon
-			f.iconframe.icon:SetTexture(f.texture_list)
+			f.iconframe.icon:SetTexture(icon)
 		end
 	end
 
-	if f.name and f.rank then
-		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spellId = UnitAura(f.unit, f.name, f.rank, filter)
-		--if name and (not f.is_mine or (f.is_mine and caster == 'player')) then
+	if f.name then
+		local name, _, _, count, _, _, expires, caster, _, _, spellId = UnitAura(f.unit, f.name, nil, filter)
 		if name and (not f.is_mine or (f.is_mine and caster == 'player')) and (not f.match_spellid or (f.match_spellid and spellId == tmp_spellid)) then
 			if caster == 'player' and config.highlightPlayerSpells then
 				f.iconframe.border:SetVertexColor(0.2, 0.6, 0.8, 1)
@@ -377,12 +372,11 @@ local CheckCooldown = function(f)
 		if addon:Round(f.iconframe:GetAlpha(), 1) ~= 0 then
 			securecall('UIFrameFadeOut', f.iconframe, 0.25, f.iconframe:GetAlpha(), 0)
 		end
-		--f.iconframe:SetAlpha(0)
 		return
 	end
 
 	if f.name and f.spellid then
-		local start, duration, enable = GetSpellCooldown(GetSpellId(f.spellid))
+		local start, duration, _ = GetSpellCooldown(GetSpellId(f.spellid))
 
 		if start and duration then
 			local now = GetTime()
@@ -433,7 +427,7 @@ local SearchAuras = function(list, filter)
 		if type(f.spellid) == 'table' then
 			f.auraFound = false
 
-			for k, spellid in ipairs(f.spellid) do
+			for _, spellid in ipairs(f.spellid) do
 				if not f.auraFound then
 					CheckAura(f, spellid, filter)
 				end
