@@ -100,7 +100,7 @@ addon.buffs = {
 	attackPower = {57330, 19506, 6673},
 	spellPower = {109773, 1459, 61316, 77747},
 	haste = {113742, 30809, 55610},
-	spellHaste = {24907, 15473, 51470},
+	spellHaste = {24907, 49868, 51470},
 	criticalStrike = {17007, 1459, 61316},
 	mastery = {116781, 19740, 116956}
 }
