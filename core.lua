@@ -203,7 +203,7 @@ SLASH_nspelltracker2 = '/nst';
 print('|c0033AAFF\/nspelltracker|r or |c0033AAFF\/nst|r to lock/unlock the frames.')
 
 local function CreateIcon(f, type)
-	local name, _, icon, powerCost, isFunnel, powerType, castingTime, minRange, maxRange = GetSpellInfo(GetspellID(f.spellID))
+	local name, _, icon, powerCost, isFunnel, powerType, castingTime, minRange, maxRange = GetSpellInfo(f:GetSpellID())
 
 	local i = CreateFrame('Frame', MakeFrameName(f, type), UIParent, 'SecureHandlerStateTemplate')
 	i:SetSize(f.size, f.size)
