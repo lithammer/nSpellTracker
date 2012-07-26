@@ -13,7 +13,7 @@ local Frames = {}
 local floor = math.floor
 local format = string.format
 
-local GetFormattedTime = function(time)
+local function GetFormattedTime(time)
 	local hr, m, s, text
 
 	if time <= 0 then
@@ -36,7 +36,7 @@ local GetFormattedTime = function(time)
 	return text
 end
 
-local ApplySize = function(i)
+local function ApplySize(i)
 	local w = i:GetWidth()
 
 	if w < i.data.size then
@@ -58,24 +58,6 @@ local ApplySize = function(i)
 	i.count:SetPoint('TOPRIGHT', 0, 0)
 end
 
-local IsCurrentSpec = function(spec)
-	if type(spec) == 'table' then
-		for _, v in ipairs(spec) do
-			if v == GetSpecialization() then
-				return true
-			end
-		end
-
-		return false
-	end
-
-	return spec == GetSpecialization()
-end
-
-local GetspellID = function(spellID)
-	return type(spellID) == 'table' and spellID[1] or spellID
-end
-
 -- Generate the frame name if a global one is needed
 local function MakeFrameName(f, t)
 	if not f.movable then
@@ -88,7 +70,7 @@ local function MakeFrameName(f, t)
 	return 'nSpellTracker'..t..'Frame'..f:GetSpellID()..'Spec'..spec..class
 end
 
-local UnlockFrame = function(i)
+local function UnlockFrame(i)
 	-- Only show icons that are visible for the current spec
 	if i.data.spec and not i.data:IsCurrentSpec() then
 		return
@@ -129,7 +111,7 @@ local UnlockFrame = function(i)
 	end
 end
 
-local LockFrame = function(i)
+local function LockFrame(i)
 	i:EnableMouse(nil)
 	i.locked = true
 	i.dragtexture:SetAlpha(0)
@@ -177,19 +159,19 @@ local function ApplyMoveFunctionality(i)
 	table.insert(Frames, i:GetName())
 end
 
-local UnlockAllFrames = function()
+local function UnlockAllFrames()
 	for i, v in ipairs(Frames) do
 		UnlockFrame(_G[v])
 	end
 end
 
-local LockAllFrames = function()
+local function LockAllFrames()
 	for i, v in ipairs(Frames) do
 		LockFrame(_G[v])
 	end
 end
 
-local ResetAllFrames = function()
+local function ResetAllFrames()
 	for i, v in ipairs(Frames) do
 		local f = _G[v]
 		if f:IsUserPlaced() then
@@ -220,7 +202,7 @@ SLASH_nspelltracker1 = '/nspelltracker';
 SLASH_nspelltracker2 = '/nst';
 print('|c0033AAFF\/nspelltracker|r or |c0033AAFF\/nst|r to lock/unlock the frames.')
 
-local CreateIcon = function(f, type)
+local function CreateIcon(f, type)
 	local name, _, icon, powerCost, isFunnel, powerType, castingTime, minRange, maxRange = GetSpellInfo(GetspellID(f.spellID))
 
 	local i = CreateFrame('Frame', MakeFrameName(f, type), UIParent, 'SecureHandlerStateTemplate')
@@ -273,7 +255,7 @@ local CreateIcon = function(f, type)
 	f.texture = icon
 end
 
-local CheckAura = function(f, spellID, filter)
+local function CheckAura(f, spellID, filter)
 	-- Make the icon visible in case we want to move it
 	if not f.iconframe.locked then
 		f.iconframe.icon:SetAlpha(1)
@@ -372,7 +354,7 @@ local CheckAura = function(f, spellID, filter)
 	end
 end
 
-local CheckCooldown = function(f)
+local function CheckCooldown(f)
 	-- Make the icon visible in case we want to move it
 	if not f.iconframe.locked then
 		f.iconframe.icon:SetAlpha(1)
@@ -436,7 +418,7 @@ local CheckCooldown = function(f)
 	end
 end
 
-local SearchAuras = function(list, filter)
+local function SearchAuras(list, filter)
 	for i, _ in ipairs(list) do
 		local f = list[i]
 
@@ -458,7 +440,7 @@ local SearchAuras = function(list, filter)
 	end
 end
 
-local SearchCooldowns = function()
+local function SearchCooldowns()
 	for i, _ in ipairs(config.CooldownList) do
 		local f = config.CooldownList[i]
 
@@ -471,7 +453,7 @@ local SearchCooldowns = function()
 end
 
 local count = 0
-local GenerateIcons = function(list, type)
+local function GenerateIcons(list, type)
 	for i, _ in ipairs(list) do
 		local f = list[i]
 
