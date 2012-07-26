@@ -4,32 +4,32 @@ local _, addon = ...
 local playerName, _ = UnitName('player')
 
 addon:Debuff({
-	spellid = 172, -- Corruption
+	spellID = 172, -- Corruption
 	size = 36,
-	pos = { a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -150, y = 0},
+	position = {'CENTER', 'UIParent', 'CENTER', -150, 0},
 	unit = 'target',
-	validate_unit = true,
-	hide_ooc = true,
-	is_mine = true,
+	validateUnit = true,
+	hideOutOfCombat = true,
+	isMine = true,
 	desaturate = true,
-	move_ingame = false,
+	movable = false,
 })
 
 addon:Debuff({
-	spellid = 980, -- Agony
-	pos = { a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -150, y = -42},
+	spellID = 980, -- Agony
+	position = {'CENTER', 'UIParent', 'CENTER', -150, -42},
 	unit = 'target',
-	validate_unit = true,
-	hide_ooc = true,
-	is_mine = true,
-	move_ingame = false,
+	validateUnit = true,
+	hideOutOfCombat = true,
+	isMine = true,
+	movable = false,
 })
 
 addon:Buff({
-	spellid = 109773,
-	pos = { a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = 150, y = 0},
+	spellID = 109773,
+	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
 })
 
 addon:Cooldown({
-	spellid = 6229,
+	spellID = 6229,
 })

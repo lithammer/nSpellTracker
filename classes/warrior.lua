@@ -6,11 +6,11 @@ local playerName, _ = UnitName('player')
 -----------------------------------------------------------------------------
 
 addon:Debuff({
-	spellid = addon.debuffs.mortalWounds, -- Mortal Wounds debuff
-	pos = { a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -150, y = -42},
+	spellID = addon.debuffs.mortalWounds, -- Mortal Wounds debuff
+	position = {'CENTER', 'UIParent', 'CENTER', -150, -42},
 	unit = 'target',
-	hide_ooc = false,
-	move_ingame = false,
+	hideOutOfCombat = false,
+	movable = false,
 	alpha = {
 		found = {
 			frame = 1,
@@ -24,10 +24,10 @@ addon:Debuff({
 })
 
 addon:Buff({
-	spellid = 6673,
-	pos = { a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = 150, y = 0},
+	spellID = 6673,
+	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
 })
 
 addon:Cooldown({
-	spellid = 6229,
+	spellID = 6229,
 })

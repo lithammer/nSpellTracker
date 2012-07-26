@@ -5,26 +5,26 @@ addon.config.BuffList = {}
 addon.config.DebuffList = {}
 addon.config.CooldownList = {}
 
-local GenerateDefault = function()
+local function GenerateDefault()
 	local default = {
 		spec = nil,
-		spellid = nil,
+		spellID = nil,
 		size = 36,
-		pos = {a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = 0, y = 0},
+		position = {'CENTER'},
 		unit = 'player',
-		visibility_state = nil,
-		validate_unit = true,
-		hide_ooc = false,
-		is_mine = false,
+		visibilityState = nil,
+		validateUnit = true,
+		hideOutOfCombat = false,
+		isMine = false,
 		desaturate = true,
-		match_spellid = true,
-		move_ingame = true,
+		matchSpellID = true,
+		movable = true,
 		alpha = {
 			found = {
 				frame = 1,
 				icon = 1,
 			},
-			not_found = {
+			notFound = {
 				frame = 0.4,
 				icon = 0.6,
 			},
@@ -32,7 +32,7 @@ local GenerateDefault = function()
 				frame = 1,
 				icon = 0.6,
 			},
-			no_cooldown = {
+			notCooldown = {
 				frame = 1,
 				icon = 1,
 			},
@@ -59,19 +59,39 @@ function addon:Round(num, idp)
 	return floor(num * mult + 0.5) / mult
 end
 
+function addon:AddSpell(list, spell)
+	function spell:IsCurrentSpec()
+		if type(self.spec) == 'table' then
+			for _, v in ipairs(self.spec) do
+				if v == GetSpecialization() then
+					return true
+				end
+			end
+
+			return false
+		end
+
+		return self.spec == GetSpecialization()
+	end
+
+	function spell:GetSpellID()
+		return type(self.spellID) == 'table' and self.spellID[1] or self.spellID
+	end
+
+	spell = MergeTables(GenerateDefault(), spell)
+	table.insert(list, spell)
+end
+
 function addon:Debuff(debuff)
-	debuff = MergeTables(GenerateDefault(), debuff)
-	table.insert(self.config.DebuffList, debuff) 
+	self:AddSpell(self.config.DebuffList, debuff)
 end
 
 function addon:Buff(buff)
-	buff = MergeTables(GenerateDefault(), buff)
-	table.insert(self.config.BuffList, buff) 
+	self:AddSpell(self.config.BuffList, buff)
 end
 
 function addon:Cooldown(cooldown)
-	cooldown = MergeTables(GenerateDefault(), cooldown)
-	table.insert(self.config.CooldownList, cooldown) 
+	self:AddSpell(self.config.CooldownList, cooldown)
 end
 
 addon.buffs = {
