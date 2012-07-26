@@ -365,7 +365,7 @@ local function CheckCooldown(f)
 		return
 	end
 
-	if f.spec and not IsCurrentSpec(f.spec) then
+	if f.spec and not f:IsCurrentSpec() then
 		f.iconframe:SetAlpha(0)
 		return
 	end
