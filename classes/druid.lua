@@ -4,9 +4,9 @@ local _, addon = ...
 local playerName, _ = UnitName('player')
 
 addon:Debuff({
-	spellID = 172, -- Corruption
+	spellID = {8921, 93402}, -- Moonfire & Sunfire
 	size = 36,
-	position = {'CENTER', 'UIParent', 'CENTER', -150, 0},
+	position = {'CENTER', 'UIParent', 'CENTER', -210, -42},
 	unit = 'target',
 	validateUnit = true,
 	hideOutOfCombat = true,
@@ -15,21 +15,20 @@ addon:Debuff({
 	movable = false,
 })
 
-addon:Debuff({
-	spellID = 980, -- Agony
-	position = {'CENTER', 'UIParent', 'CENTER', -150, -42},
-	unit = 'target',
-	validateUnit = true,
+addon:Cooldown({
+	spellID = 78674, -- Starsurge
+	size = 36,
+	position = {'CENTER', 'UIParent', 'CENTER', -210, 0},
 	hideOutOfCombat = true,
-	isMine = true,
+	desaturate = true,
 	movable = false,
 })
 
-addon:Buff({
-	spellID = 109773,
-	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
-})
-
 addon:Cooldown({
-	spellID = 6229,
+	spellID = 48505, -- Starfall
+	size = 36,
+	position = {'CENTER', 'UIParent', 'CENTER', -252, 0},
+	hideOutOfCombat = true,
+	desaturate = true,
+	movable = false,
 })
