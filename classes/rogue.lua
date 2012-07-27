@@ -4,9 +4,10 @@ local _, addon = ...
 local playerName, _ = UnitName('player')
 
 addon:Debuff({
-	spellID = 172, -- Corruption
+	spellID = 1943, -- Rupture
+	spec = {1, 3},
 	size = 36,
-	position = {'CENTER', 'UIParent', 'CENTER', -150, 0},
+	position = {'CENTER', 'UIParent', 'CENTER', -210, -42},
 	unit = 'target',
 	validateUnit = true,
 	hideOutOfCombat = true,
@@ -16,20 +17,25 @@ addon:Debuff({
 })
 
 addon:Debuff({
-	spellID = 980, -- Agony
-	position = {'CENTER', 'UIParent', 'CENTER', -150, -42},
+	spellID = 84617, -- Revealing Strike
+	spec = 2,
+	position = {'CENTER', 'UIParent', 'CENTER', -210, -42},
 	unit = 'target',
-	validateUnit = true,
 	hideOutOfCombat = true,
-	isMine = true,
 	movable = false,
 })
 
 addon:Buff({
-	spellID = 109773,
-	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
+	spellID = 5171, -- Slice and Dice
+	position = {'CENTER', 'UIParent', 'CENTER', -210, 0},
+	hideOutOfCombat = true,
+	movable = false,
 })
 
-addon:Cooldown({
-	spellID = 6229,
+addon:Buff({
+	spellID = 32645, -- Envenom
+	spec = 1,
+	position = {'CENTER', 'UIParent', 'CENTER', -210, -84},
+	hideOutOfCombat = true,
+	movable = false,
 })
