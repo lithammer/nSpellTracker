@@ -7,7 +7,7 @@
 local _, addon = ...
 local config = addon.config
 
--- Global variable gather all frames that can be moved ingame, will be accessed by slash command function later
+-- Table to hold created icons for easy access
 local Frames = {}
 
 local floor = math.floor
@@ -58,12 +58,7 @@ local function ApplySize(i)
 	i.count:SetPoint('TOPRIGHT', 0, 0)
 end
 
--- Generate the frame name if a global one is needed
-local function MakeFrameName(f, t)
-	if not f.movable then
-		--return nil
-	end
-
+local function GenerateFrameName(f, t)
 	local _, class = UnitClass('player')
 	local spec = type(f.spec) == 'table' and f.spec[1] or f.spec and f.spec or 'None'
 
@@ -127,8 +122,6 @@ local function ApplyMoveFunctionality(i)
 		if i:IsUserPlaced() then
 			i:SetUserPlaced(false)
 		end
-
-		--return
 	end
 
 	local t = i:CreateTexture(nil, 'OVERLAY', nil, 6)
@@ -155,7 +148,6 @@ local function ApplyMoveFunctionality(i)
 	-- Lock frame by default
 	LockFrame(i)
 
-	-- Load all the frames that can be moved into the global table
 	table.insert(Frames, i:GetName())
 end
 
@@ -200,12 +192,12 @@ end
 SlashCmdList['nspelltracker'] = SlashCmd;
 SLASH_nspelltracker1 = '/nspelltracker';
 SLASH_nspelltracker2 = '/nst';
-print('|c0033AAFF\/nspelltracker|r or |c0033AAFF\/nst|r to lock/unlock the frames.')
+print('|c0033AAFF\/nspelltracker|r or |c0033AAFF\/nst|r to lock/unlock the frames or |c0033AAFF\/nst reset|r to reset frame positions.')
 
 local function CreateIcon(f, type)
 	local name, _, icon, powerCost, isFunnel, powerType, castingTime, minRange, maxRange = GetSpellInfo(f:GetSpellID())
 
-	local i = CreateFrame('Frame', MakeFrameName(f, type), UIParent, 'SecureHandlerStateTemplate')
+	local i = CreateFrame('Frame', GenerateFrameName(f, type), UIParent, 'SecureHandlerStateTemplate')
 	i:SetSize(f.size, f.size)
 	i:SetPoint(unpack(f.position))
 
