@@ -17,15 +17,15 @@ various settings. Here's an example for tracking Corruption:
 
 ```lua
 addon:Debuff({
-	spellid = 172,
+	spellID = 172,
 	size = 36,
-	pos = { a1 = 'CENTER', a2 = 'CENTER', af = 'UIParent', x = -150, y = 0},
+	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
 	unit = 'target',
-	validate_unit = true,
-	hide_ooc = true,
-	is_mine = true,
+	validateUnit = true,
+	hideOutOfCombat = true,
+	isMine = true,
 	desaturate = true,
-	move_ingame = false,
+	movable = false,
 })
 ```
 
@@ -37,11 +37,19 @@ addon:Buff({
 })
 ```
 
+The same goes with the `spec` option:
+
+```lua
+addon:Buff({
+	spec = {1, 3},
+})
+```
+
 There's also a helper buff/debuff table so that you can easily target
 buff/debuff groups like Mortal Wounds or Spell Power buffs. Just assign
-`spellid` any of the following values:
+`spellID` any of the following values:
 
-```
+```lua
 -- Buffs
 addon.buffs.stats
 addon.buffs.stamina
@@ -71,22 +79,16 @@ addon.debuffs.mortalWounds
 
 	-- Attribute that lets you show/hide the frame on a given state condition.
 	-- example: '[stance:2] show; hide'
-	visibility_state = '[combat] show; hide',
+	visibilityState = '[combat] show; hide',
 
 	-- The spellid to track this will represent the icon if none is found.
-	spellid = 469,
+	spellID = 469,
 
 	-- The size of the icon.
 	size = 26,
 
 	-- The position of the icon (http://www.wowwiki.com/API_Region_SetPoint).
-	pos  = {
-		a1 = 'BOTTOM',
-		a2 = 'BOTTOM',
-		af = 'UIParent',
-		x = 130,
-		y = 107
-	},
+	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
 
 	--Unit ID (http://www.wowwiki.com/UnitId), the unit that should be tracked.
 	unit = 'player',
@@ -95,21 +97,21 @@ addon.debuffs.mortalWounds
 	validate_unit = true,
 
 	-- Hide icon out of combat.
-	hide_ooc = true,
+	hideOutOfCombat = true,
 
 	-- Hide if the buff/debuff isn't mine.
-	is_mine = false,
+	isMine = false,
 
 	-- Desaturate the icon if not found.
 	desaturate = true,
 
 	-- In case you not only match the name but the spell id of the buff/debuff.
-	match_spellid = false,
+	matchSpellID = false,
 
 	-- In case you want to move the frame ingame, the size will be the MINIMUM
 	-- frame size you can resize to, so adjust the size in case you need lower
 	-- minimum size ingame.
-	move_ingame = true,
+	movable = true,
 
 	-- Set the alpha values of your icons (transparency).
 
@@ -119,7 +121,7 @@ addon.debuffs.mortalWounds
 			frame = 1,
 			icon = 1,
 		},
-		not_found = {
+		notFound = {
 			frame = 0.4,
 			icon = 0.6,
 		},
@@ -132,7 +134,7 @@ addon.debuffs.mortalWounds
 			frame = 1,
 			icon = 0.6,
 		},
-		no_cooldown = {
+		notCooldown = {
 			frame = 1,
 			icon = 1,
 		},
