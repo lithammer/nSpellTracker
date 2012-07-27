@@ -16,7 +16,7 @@ addon:Debuff({
 			frame = 1,
 			icon = 1,
 		},
-		not_found = {
+		notFound = {
 			frame = 0.4,
 			icon = 0.6,
 		},
