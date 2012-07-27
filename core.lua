@@ -195,7 +195,7 @@ SLASH_nspelltracker2 = '/nst';
 print('|c0033AAFF\/nspelltracker|r or |c0033AAFF\/nst|r to lock/unlock the frames or |c0033AAFF\/nst reset|r to reset frame positions.')
 
 local function CreateIcon(f, type)
-	local name, _, icon, powerCost, isFunnel, powerType, castingTime, minRange, maxRange = GetSpellInfo(f:GetSpellID())
+	local spellName, _, spellIcon = GetSpellInfo(f:GetSpellID())
 
 	local i = CreateFrame('Frame', GenerateFrameName(f, type), UIParent, 'SecureHandlerStateTemplate')
 	i:SetSize(f.size, f.size)
@@ -209,10 +209,10 @@ local function CreateIcon(f, type)
 	back:SetAllPoints(i)
 	back:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\d3portrait_back2')
 
-	local texture = i:CreateTexture(nil, 'BACKGROUND', nil, -6)
-	texture:SetTexture(icon)
-	texture:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-	texture:SetDesaturated(f.desaturate and 1 or nil)
+	local icon = i:CreateTexture(nil, 'BACKGROUND', nil, -6)
+	icon:SetTexture(spellIcon)
+	icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+	icon:SetDesaturated(f.desaturate and 1 or nil)
 
 	local border = i:CreateTexture(nil, 'BACKGROUND', nil, -4)
 	border:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_roth')
@@ -227,12 +227,12 @@ local function CreateIcon(f, type)
 	count:SetJustifyH('RIGHT')
 
 	i.glow = glow
-	i.border = border
 	i.back = back
-	i.position = f.position
+	i.icon = icon
+	i.border = border
 	i.time = time
 	i.count = count
-	i.icon = texture
+
 	i.data = f
 
 	ApplySize(i)
@@ -243,15 +243,15 @@ local function CreateIcon(f, type)
 	end
 
 	f.iconframe = i
-	f.name = name
-	f.texture = icon
+	f.name = spellName
+	f.texture = spellIcon
 end
 
 local function CheckAura(f, spellID, filter)
 	-- Make the icon visible in case we want to move it
 	if not f.iconframe.locked then
-		f.iconframe.icon:SetAlpha(1)
 		f.iconframe:SetAlpha(1)
+		f.iconframe.icon:SetAlpha(1)
 		f.iconframe.icon:SetDesaturated(nil)
 		f.iconframe.time:SetText('30m')
 		f.iconframe.count:SetText('3')
@@ -349,8 +349,8 @@ end
 local function CheckCooldown(f)
 	-- Make the icon visible in case we want to move it
 	if not f.iconframe.locked then
-		f.iconframe.icon:SetAlpha(1)
 		f.iconframe:SetAlpha(1)
+		f.iconframe.icon:SetAlpha(1)
 		f.iconframe.icon:SetDesaturated(nil)
 		f.iconframe.time:SetText('30m')
 		f.iconframe.count:SetText('3')
