@@ -95,21 +95,21 @@ function addon:Cooldown(cooldown)
 end
 
 addon.buffs = {
-	stats = {1126, 115921, 20217},
-	stamina = {21562, 103127, 469},
+	stats = {1126, 115921, 20217, 90363},
+	stamina = {21562, 103127, 469, 90364},
 	attackPower = {57330, 19506, 6673},
-	spellPower = {109773, 1459, 61316, 77747},
-	haste = {113742, 30809, 55610},
+	spellPower = {109773, 1459, 61316, 77747, 126309},
+	haste = {113742, 30809, 55610, 128432, 128433},
 	spellHaste = {24907, 49868, 51470},
-	criticalStrike = {17007, 1459, 61316},
-	mastery = {116781, 19740, 116956}
+	criticalStrike = {116781, 17007, 1459, 61316, 97229, 24604, 90309, 126373, 126309},
+	mastery = {19740, 116956, 93435, 128997}
 }
 
 addon.debuffs = {
 	weakenedArmor = 113746,
 	physicalVulnerability = 81326,
-	magicVulnerability = {1490, 104225, 116202, 93068},
-	weakenedBlows = 115798,
-	slowCasting = {73975, 5760, 109466},
-	mortalWounds = 115804
+	magicVulnerability = {1490, 104225, 116202, 93068, 34889, 24844},
+	weakenedBlows = {115798, 50256, 24423},
+	slowCasting = {73975, 5760, 109466, 50274, 90314, 126402, 58604},
+	mortalWounds = {115804, 8680, 82654, 54680}
 }
