@@ -6,11 +6,18 @@ local playerName, _ = UnitName('player')
 --[ Debuffs ]----------------------------------------------------------------
 
 addon:Debuff({
+	spellID = 48181, -- Haunt
+	spec = 1,
+	position = {'CENTER', 'UIParent', 'CENTER', -252, 42},
+	unit = 'target',
+	movable = false,
+})
+
+addon:Debuff({
 	spellID = 30108, -- Unstable Affliction
 	spec = 1,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, 42},
 	unit = 'target',
-	isMine = true,
 	movable = false,
 })
 
@@ -19,7 +26,6 @@ addon:Debuff({
 	spec = 3,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, 42},
 	unit = 'target',
-	isMine = true,
 	movable = true,
 })
 
@@ -29,7 +35,6 @@ addon:Debuff({
 	size = 36,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, 0},
 	unit = 'target',
-	isMine = true,
 	desaturate = true,
 	movable = false,
 })
@@ -39,7 +44,6 @@ addon:Debuff({
 	spec = 1,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, -42},
 	unit = 'target',
-	isMine = true,
 	movable = false,
 })
 
@@ -48,7 +52,6 @@ addon:Debuff({
 	spec = 2,
 	position = {'CENTER', 'UIParent', 'CENTER', -252, 42},
 	unit = 'target',
-	isMine = true,
 	movable = false,
 })
 
@@ -58,7 +61,6 @@ addon:Debuff({
 	size = 36,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, -42},
 	unit = 'target',
-	isMine = true,
 	desaturate = true,
 	movable = false,
 	alpha = {
