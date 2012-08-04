@@ -3,8 +3,6 @@ if select(2, UnitClass('player')) ~= 'WARRIOR' then return end
 local _, addon = ...
 local playerName, _ = UnitName('player')
 
------------------------------------------------------------------------------
-
 addon:Debuff({
 	spellID = addon.debuffs.mortalWounds, -- Mortal Wounds debuff
 	position = {'CENTER', 'UIParent', 'CENTER', -150, -42},
