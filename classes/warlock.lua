@@ -29,7 +29,6 @@ addon:Debuff({
 	size = 36,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, 0},
 	unit = 'target',
-	validateUnit = true,
 	isMine = true,
 	desaturate = true,
 	movable = false,
@@ -40,7 +39,6 @@ addon:Debuff({
 	spec = 1,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, -42},
 	unit = 'target',
-	validateUnit = true,
 	isMine = true,
 	movable = false,
 })
@@ -50,9 +48,25 @@ addon:Debuff({
 	spec = 2,
 	position = {'CENTER', 'UIParent', 'CENTER', -252, 42},
 	unit = 'target',
-	validateUnit = true,
 	isMine = true,
 	movable = false,
+})
+
+addon:Debuff({
+	spellID = 603, -- Doom
+	spec = 2,
+	size = 36,
+	position = {'CENTER', 'UIParent', 'CENTER', -210, -42},
+	unit = 'target',
+	isMine = true,
+	desaturate = true,
+	movable = false,
+	alpha = {
+		notFound = {
+			frame = 0,
+			icon = 0,
+		}
+	},
 })
 
 addon:Debuff({
@@ -77,7 +91,6 @@ addon:Cooldown({
 	spec = 3,
 	position = {'CENTER', 'UIParent', 'CENTER', -252, 42},
 	movable = false,
-	hideOutOfCombat = true,
 })
 
 addon:Cooldown({
@@ -85,5 +98,4 @@ addon:Cooldown({
 	spec = 2,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, 42},
 	movable = false,
-	hideOutOfCombat = true,
 })
