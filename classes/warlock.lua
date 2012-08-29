@@ -86,6 +86,12 @@ addon:Buff({
 })
 ]]--
 
+addon:Buff({
+	spellID = 117896,
+	spec = 3,
+	position = {'CENTER', 'UIParent', 'CENTER', -252, 0},
+})
+
 --[ Cooldowns ]--------------------------------------------------------------
 
 addon:Cooldown({
