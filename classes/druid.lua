@@ -4,7 +4,20 @@ local _, addon = ...
 local playerName, _ = UnitName('player')
 
 addon:Debuff({
-	spellID = {8921, 93402}, -- Moonfire & Sunfire
+	spellID = 8921, -- Moonfire
+	spec = 1,
+	size = 36,
+	position = {'CENTER', 'UIParent', 'CENTER', -210, 0},
+	unit = 'target',
+	validateUnit = true,
+	hideOutOfCombat = true,
+	isMine = true,
+	desaturate = true,
+	movable = false,
+})
+
+addon:Debuff({
+	spellID = 93402, -- Sunfire
 	spec = 1,
 	size = 36,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, -42},
@@ -54,7 +67,7 @@ addon:Cooldown({
 	spellID = 78674, -- Starsurge
 	spec = 1,
 	size = 36,
-	position = {'CENTER', 'UIParent', 'CENTER', -210, 0},
+	position = {'CENTER', 'UIParent', 'CENTER', -252, 0},
 	hideOutOfCombat = true,
 	desaturate = true,
 	movable = false,
@@ -64,7 +77,7 @@ addon:Cooldown({
 	spellID = 48505, -- Starfall
 	spec = 1,
 	size = 36,
-	position = {'CENTER', 'UIParent', 'CENTER', -252, 0},
+	position = {'CENTER', 'UIParent', 'CENTER', -252, -42},
 	hideOutOfCombat = true,
 	desaturate = true,
 	movable = false,
