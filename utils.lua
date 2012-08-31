@@ -54,11 +54,6 @@ local function MergeTables(t1, t2)
     return t1
 end
 
-function addon:Round(num, idp)
-	local mult = 10^(idp or 0)
-	return floor(num * mult + 0.5) / mult
-end
-
 function addon:AddSpell(list, spell)
 	function spell:IsCurrentSpec()
 		if type(self.spec) == 'table' then
@@ -71,6 +66,10 @@ function addon:AddSpell(list, spell)
 			return false
 		end
 
+		if type(self.spec) == 'string' then
+			return GetSpecialization() and GetSpecializationRole(GetSpecialization()) == self.spec
+		end
+
 		return self.spec == GetSpecialization()
 	end
 
@@ -79,6 +78,7 @@ function addon:AddSpell(list, spell)
 	end
 
 	spell = MergeTables(GenerateDefault(), spell)
+
 	table.insert(list, spell)
 end
 
