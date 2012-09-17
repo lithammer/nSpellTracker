@@ -3,7 +3,40 @@ if select(2, UnitClass('player')) ~= 'WARLOCK' then return end
 local _, addon = ...
 local playerName, _ = UnitName('player')
 
---[ Debuffs ]----------------------------------------------------------------
+--[[
+Default values:
+
+spec = nil,
+spellID = nil,
+size = 36,
+position = {'CENTER'},
+unit = 'player',
+visibilityState = nil,
+validateUnit = true,
+hideOutOfCombat = true,
+isMine = true,
+desaturate = true,
+matchSpellID = true,
+movable = true,
+alpha = {
+	found = {
+		frame = 1,
+		icon = 1,
+	},
+	notFound = {
+		frame = 0.4,
+		icon = 0.6,
+	},
+	cooldown = {
+		frame = 1,
+		icon = 0.6,
+	},
+	notCooldown = {
+		frame = 1,
+		icon = 1,
+	},
+},
+]]--
 
 addon:Debuff({
 	spellID = 48181, -- Haunt
@@ -26,7 +59,7 @@ addon:Debuff({
 	spec = 3,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, 42},
 	unit = 'target',
-	movable = true,
+	movable = false,
 })
 
 addon:Debuff({
@@ -75,9 +108,8 @@ addon:Debuff({
 	spellID = addon.debuffs.magicVulnerability,
 	position = {'BOTTOM', 'UIParent', 'BOTTOM', 0, 210},
 	unit = 'target',
+	isMine = false,
 })
-
---[ Buffs ]------------------------------------------------------------------
 
 --[[
 addon:Buff({
@@ -87,12 +119,24 @@ addon:Buff({
 ]]--
 
 addon:Buff({
-	spellID = 117896,
+	spellID = 117896, -- Backdraft
 	spec = 3,
 	position = {'CENTER', 'UIParent', 'CENTER', -252, 0},
+	movable = false,
 })
 
---[ Cooldowns ]--------------------------------------------------------------
+addon:Buff({
+	spellID = 111400,
+	position = {'CENTER', 'UIParent', 'CENTER', 100, -42},
+	hideOutOfCombat = false,
+	movable = false,
+	alpha = {
+		notFound = {
+			frame = 0,
+			icon = 0,
+		}
+	},
+})
 
 addon:Cooldown({
 	spellID = 17962, -- Conflagrate
