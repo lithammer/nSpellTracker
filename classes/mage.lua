@@ -9,7 +9,6 @@ addon:Debuff({
 	size = 50,
 	unit = 'target',
 	position = {'CENTER', 'UIParent', 'CENTER', 0, -250},
-	unit = 'target',
 	validateUnit = true,
 	hideOutOfCombat = true,
 	isMine = true,
@@ -23,7 +22,6 @@ addon:Debuff({
 	size = 36,
 	unit = 'target',
 	position = {'CENTER', 'UIParent', 'CENTER', -50, -250},
-	unit = 'target',
 	validateUnit = true,
 	hideOutOfCombat = true,
 	isMine = true,
@@ -37,7 +35,32 @@ addon:Debuff({
 	size = 36,
 	unit = 'target',
 	position = {'CENTER', 'UIParent', 'CENTER', 50, -250},
+	validateUnit = true,
+	hideOutOfCombat = true,
+	isMine = true,
+	desaturate = true,
+	movable = false,
+})
+
+addon:Debuff({
+	spellID = 36032, -- Arcane Charge
+	spec = 1,
+	size = 50,
+	position = {'CENTER', 'UIParent', 'CENTER', 0, -250},
+	unit = 'player',
+	validateUnit = true,
+	hideOutOfCombat = true,
+	isMine = true,
+	desaturate = true,
+	movable = false,
+})
+
+addon:Debuff({
+	spellID = 114923, -- Nether Tempest
+	spec = 1,
+	size = 36,
 	unit = 'target',
+	position = {'CENTER', 'UIParent', 'CENTER', 50, -250},
 	validateUnit = true,
 	hideOutOfCombat = true,
 	isMine = true,
