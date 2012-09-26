@@ -12,7 +12,7 @@ local function GenerateDefault()
 		size = 36,
 		position = {'CENTER'},
 		unit = 'player',
-		visibilityState = nil,
+		visibilityState = '[petbattle] [vehicleui] hide; show',
 		validateUnit = true,
 		hideOutOfCombat = true,
 		isMine = true,
