@@ -39,10 +39,11 @@ alpha = {
 ]]--
 
 addon:Debuff({
-	spellID = addon.debuffs.mortalWounds, -- Mortal Wounds debuff
-	position = {'CENTER', 'UIParent', 'CENTER', -150, -42},
+	spellID = addon.debuffs.weakenedArmor, -- Mortal Wounds debuff
+	position = {'CENTER', 'UIParent', 'CENTER', -52, -250},
+	spec = 3,
 	unit = 'target',
-	hideOutOfCombat = false,
+	hideOutOfCombat = true,
 	movable = false,
 	alpha = {
 		found = {
@@ -54,4 +55,12 @@ addon:Debuff({
 			icon = 0.6,
 		},
 	},
+})
+
+addon:Buff({
+	spellID = 132404, -- Shield Block
+	position = {'CENTER', 'UIParent', 'CENTER', 0, -250},
+	spec = 3,
+	size = 52,
+	movable = false,
 })
