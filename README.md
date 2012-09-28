@@ -33,7 +33,7 @@ To track multiple spells you just add a table of spell ids like so:
 
 ```lua
 addon:Buff({
-	spellid = {172, 234, 2356},
+	spellID = {172, 234, 2356},
 })
 ```
 
@@ -79,7 +79,7 @@ addon.debuffs.mortalWounds
 
 	-- Attribute that lets you show/hide the frame on a given state condition.
 	-- example: '[stance:2] show; hide'
-	visibilityState = '[combat] show; hide',
+	visibilityState = '[petbattle] hide; show',
 
 	-- The spellid to track this will represent the icon if none is found.
 	spellID = 469,
@@ -94,7 +94,7 @@ addon.debuffs.mortalWounds
 	unit = 'player',
 
 	-- Only show the icon if unit is found.
-	validate_unit = true,
+	validateUnit = true,
 
 	-- Hide icon out of combat.
 	hideOutOfCombat = true,
@@ -105,10 +105,10 @@ addon.debuffs.mortalWounds
 	-- Desaturate the icon if not found.
 	desaturate = true,
 
-	-- In case you not only match the name but the spell id of the buff/debuff.
+	-- Match only spell IDs (instead of spell names extracted for a spell ID)
 	matchSpellID = false,
 
-	-- In case you want to move the frame ingame, the size will be the MINIMUM
+	-- In case you want to move the frame in-game, the size will be the MINIMUM
 	-- frame size you can resize to, so adjust the size in case you need lower
 	-- minimum size ingame.
 	movable = true,
