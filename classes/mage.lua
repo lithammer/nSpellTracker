@@ -67,3 +67,16 @@ addon:Debuff({
 	desaturate = true,
 	movable = false,
 })
+
+addon:Debuff({
+	spellID = 112948, -- Frost Bomb
+	spec = 3,
+	size = 50,
+	unit = 'target',
+	position = {'CENTER', 'UIParent', 'CENTER', 0, -250},
+	validateUnit = true,
+	hideOutOfCombat = true,
+	isMine = true,
+	desaturate = true,
+	movable = false,
+})
