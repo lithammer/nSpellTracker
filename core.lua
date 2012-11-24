@@ -36,6 +36,25 @@ local function GetFormattedTime(time)
 	return text
 end
 
+local FormatNumber = function(v)
+	if v > 1E10 then
+		return floor(v / 1E9)..'b'
+	elseif v > 1E9 then
+		return floor((v / 1E9) * 10 / 10)..'b'
+	elseif v > 1E7 then
+		return floor(v / 1E6)..'m'
+	elseif v > 1E6 then
+		return floor((v / 1E6) * 10 / 10)..'m'
+	elseif v > 1E4 then
+		return floor(v / 1E3)..'k'
+	elseif v > 1E3 then
+		return floor((v / 1E3) * 10 / 10)..'k'
+	else
+		return v
+	end
+end
+
+
 local function ApplySize(i)
 	local w = i:GetWidth()
 
@@ -51,11 +70,14 @@ local function ApplySize(i)
 	i.icon:SetPoint('TOPLEFT', i, 'TOPLEFT', w*3/32, -w*3/32)
 	i.icon:SetPoint('BOTTOMRIGHT', i, 'BOTTOMRIGHT', -w*3/32, w*3/32)
 
-	i.time:SetFont(STANDARD_TEXT_FONT, w*16/36, 'THINOUTLINE')
+	i.time:SetFont(STANDARD_TEXT_FONT, w * 16 / 36, 'THINOUTLINE')
 	i.time:SetPoint('BOTTOM', 0, 0)
 
-	i.count:SetFont(STANDARD_TEXT_FONT, w*18/32, 'OUTLINE')
+	i.count:SetFont(STANDARD_TEXT_FONT, w * 18 / 32, 'OUTLINE')
 	i.count:SetPoint('TOPRIGHT', 0, 0)
+
+	i.value:SetFont(STANDARD_TEXT_FONT, w * 16 / 36, 'THINOUTLINE')
+	i.value:SetPoint('TOPLEFT', 0, 0)
 end
 
 local function GenerateFrameName(f, t)
@@ -220,11 +242,16 @@ local function CreateIcon(f, type)
 	border:SetAllPoints(i)
 
 	local time = i:CreateFontString(nil, 'BORDER')
-	time:SetTextColor(1, 0.8, 0)
+	time:SetTextColor(1, 1, 1)
 
 	local count = i:CreateFontString(nil, 'BORDER')
 	count:SetTextColor(1, 1, 1)
 	count:SetJustifyH('RIGHT')
+
+	local value = i:CreateFontString(nil, 'BORDER')
+	value:SetTextColor(1, 1, 1)
+	value:SetJustifyH('CENTER')
+
 
 	i.glow = glow
 	i.back = back
@@ -232,6 +259,7 @@ local function CreateIcon(f, type)
 	i.border = border
 	i.time = time
 	i.count = count
+	i.value = value
 
 	i.data = f
 
@@ -255,6 +283,7 @@ local function CheckAura(f, spellID, filter)
 		f.iconframe.icon:SetDesaturated(nil)
 		f.iconframe.time:SetText('30m')
 		f.iconframe.count:SetText('3')
+		f.iconframe.value:SetText('')
 		return
 	end
 
@@ -286,7 +315,7 @@ local function CheckAura(f, spellID, filter)
 	end
 
 	if f.name then
-		local name, _, _, count, _, _, expires, caster, _, _, auraID = UnitAura(f.unit, f.name, nil, filter)
+		local name, _, _, count, _, _, expires, caster, _, _, auraID, _, _, value1, value2, value3 = UnitAura(f.unit, f.name, nil, filter)
 		if name and (not f.isMine or (f.isMine and caster == 'player')) and (not f.matchspellID or (f.matchspellID and auraID == tmp_spellID)) then
 			if caster == 'player' and config.highlightPlayerSpells then
 				f.iconframe.border:SetVertexColor(0.2, 0.6, 0.8, 1)
@@ -306,21 +335,38 @@ local function CheckAura(f, spellID, filter)
 				f.iconframe.icon:SetDesaturated(nil)
 			end
 
-			--local value = floor((expires-GetTime())*10+0.5)/10
 			if count and count > 1 then
 				f.iconframe.count:SetText(count)
 			else
 				f.iconframe.count:SetText('')
 			end
 
-			local value = expires - GetTime()
-			if value < 10 then
-				f.iconframe.time:SetTextColor(1, 0.4, 0)
+			local timeRemaining = expires - GetTime()
+			if timeRemaining < 3 then
+				--f.iconframe.time:SetTextColor(1, 0.4, 0)
+				f.iconframe.time:SetTextColor(1, 0, 0)
 			else
-				f.iconframe.time:SetTextColor(1, 0.8, 0)
+				--f.iconframe.time:SetTextColor(1, 0.8, 0)
+				f.iconframe.time:SetTextColor(1, 1, 1)
 			end
 
-			f.iconframe.time:SetText(GetFormattedTime(value))
+			f.iconframe.time:SetText(GetFormattedTime(timeRemaining))
+
+			if f.showValue then
+				local value
+				if f.showValue == 1 then
+					value = value1
+				elseif f.showValue == 2 then
+					value = value2
+				elseif f.showValue == 3 then
+					value = value3
+				end
+				f.iconframe.value:SetText(FormatNumber(value) or '')
+			end
+
+			if f.PostUpdateHook then
+				f.PostUpdateHook(f.iconframe, name, count)
+			end
 		else
 			f.iconframe:SetAlpha(f.alpha.notFound.frame)
 			f.iconframe.icon:SetAlpha(f.alpha.notFound.icon)
@@ -331,6 +377,7 @@ local function CheckAura(f, spellID, filter)
 
 			f.iconframe.time:SetText('')
 			f.iconframe.count:SetText('')
+			f.iconframe.value:SetText('')
 			f.iconframe.time:SetTextColor(1, 0.8, 0)
 
 			if config.highlightPlayerSpells then
@@ -383,10 +430,12 @@ local function CheckCooldown(f)
 					f.iconframe.icon:SetDesaturated(1)
 				end
 
-				if value < 10 then
-					f.iconframe.time:SetTextColor(1, 0.4, 0)
+				if value < 3 then
+					--f.iconframe.time:SetTextColor(1, 0.4, 0)
+					f.iconframe.time:SetTextColor(1, 0, 0)
 				else
-					f.iconframe.time:SetTextColor(1, 0.8, 0)
+					--f.iconframe.time:SetTextColor(1, 0.8, 0)
+					f.iconframe.time:SetTextColor(1, 1, 1)
 				end
 
 				f.iconframe.time:SetText(GetFormattedTime(value))
@@ -401,6 +450,10 @@ local function CheckCooldown(f)
 				if f.desaturate then
 					f.iconframe.icon:SetDesaturated(nil)
 				end
+			end
+
+			if f.PostUpdateHook then
+				f.PostUpdateHook(f.iconframe, duration)
 			end
 		end
 	end

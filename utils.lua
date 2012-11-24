@@ -19,6 +19,7 @@ local function GenerateDefault()
 		desaturate = true,
 		matchSpellID = true,
 		movable = true,
+		showValue = nil,
 		alpha = {
 			found = {
 				frame = 1,
