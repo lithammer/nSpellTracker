@@ -315,7 +315,7 @@ local function CheckAura(f, spellID, filter)
 	end
 
 	if f.name then
-		local name, _, _, count, _, _, expires, caster, _, _, auraID, _, _, value1, value2, value3 = UnitAura(f.unit, f.name, nil, filter)
+		local name, _, _, count, _, _, expires, caster, _, _, auraID, _, _, isCastByPlayer, value1, value2, value3 = UnitAura(f.unit, f.name, nil, filter)
 		if name and (not f.isMine or (f.isMine and caster == 'player')) and (not f.matchspellID or (f.matchspellID and auraID == tmp_spellID)) then
 			if caster == 'player' and config.highlightPlayerSpells then
 				f.iconframe.border:SetVertexColor(0.2, 0.6, 0.8, 1)
@@ -487,6 +487,18 @@ local function SearchCooldowns()
 
 		if not f.iconframe:IsShown() then
 			return
+		end
+
+		if type(f.spellID) == 'table' then
+			for _, spellID in ipairs(f.spellID) do
+				local name, _, icon = GetSpellInfo(spellID)
+
+				if GetSpellBookItemName(name) then
+					f.spellID = spellID
+					f.iconframe.icon:SetTexture(icon)
+					break
+				end
+			end
 		end
 
 		CheckCooldown(f)
