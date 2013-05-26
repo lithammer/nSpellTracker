@@ -222,6 +222,8 @@ local function CreateIcon(f, type)
 	local i = CreateFrame('Frame', GenerateFrameName(f, type), UIParent, 'SecureHandlerStateTemplate')
 	i:SetSize(f.size, f.size)
 	i:SetPoint(unpack(f.position))
+	i:SetFrameStrata('MEDIUM')
+	i:SetFrameLevel(4)
 
 	local glow = i:CreateTexture(nil, 'BACKGROUND', nil, -8)
 	glow:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_glow')
