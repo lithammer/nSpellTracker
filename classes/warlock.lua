@@ -199,25 +199,28 @@ addon:Cooldown({
 	}
 })
 
-local _, _, _, _, selected = GetTalentInfo(14)
-if selected then
-	addon:Cooldown({
-		spellID = 111898, -- Grimoire: Felguard
-		spec = 2,
-		position = {'CENTER', 'UIParent', 'CENTER', -294, 0},
-		movable = false,
-		alpha = {
-			cooldown = {
-				frame = 0.8,
-				icon = 0.4,
-			},
-			notCooldown = {
-				frame = 0.8,
-				icon = 0.8,
-			}
+addon:Cooldown({
+	spellID = 111898, -- Grimoire: Felguard
+	spec = 2,
+	position = {'CENTER', 'UIParent', 'CENTER', -294, 0},
+	movable = false,
+	alpha = {
+		cooldown = {
+			frame = 0.8,
+			icon = 0.4,
+		},
+		notCooldown = {
+			frame = 0.8,
+			icon = 0.8,
 		}
-	})
-end
+	},
+	PostUpdateHook = function(iconframe)
+		local _, _, _, _, selected = GetTalentInfo(14)
+		if not selected then
+			iconframe:SetAlpha(0)
+		end
+	end
+})
 
 addon:Cooldown({
 	spellID = 17962, -- Conflagrate
@@ -246,7 +249,7 @@ addon:Cooldown({
 })
 
 addon:Cooldown({
-	spellID = 119914, -- Felstorm
+	spellID = {119914, 119915}, -- Wrathstorm, Felstorm
 	spec = 2,
 	position = {'CENTER', 'UIParent', 'CENTER', -210, 84},
 	movable = false,
