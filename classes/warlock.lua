@@ -213,13 +213,7 @@ addon:Cooldown({
 			frame = 0.8,
 			icon = 0.8,
 		}
-	},
-	PostUpdateHook = function(iconframe)
-		local _, _, _, _, selected = GetTalentInfo(14)
-		if not selected then
-			iconframe:SetAlpha(0)
-		end
-	end
+	}
 })
 
 addon:Cooldown({
