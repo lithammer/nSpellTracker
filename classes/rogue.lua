@@ -1,41 +1,25 @@
-if select(2, UnitClass('player')) ~= 'ROGUE' then return end
-
 local _, addon = ...
-local playerName, _ = UnitName('player')
+if addon.playerClass ~= 'ROGUE' then return end
 
-addon:Debuff({
-	spellID = 1943, -- Rupture
+-- Rupture
+addon:Debuff(1943, {
 	spec = {1, 3},
-	size = 36,
-	position = {'CENTER', 'UIParent', 'CENTER', -210, -42},
-	unit = 'target',
-	validateUnit = true,
-	hideOutOfCombat = true,
-	isMine = true,
-	desaturate = true,
-	movable = false,
+	position = {'CENTER', 'UIParent', 'CENTER', -210, -42}
 })
 
-addon:Debuff({
-	spellID = 84617, -- Revealing Strike
+-- Revealing Strike
+addon:Debuff(84617, {
 	spec = 2,
-	position = {'CENTER', 'UIParent', 'CENTER', -210, -42},
-	unit = 'target',
-	hideOutOfCombat = true,
-	movable = false,
+	position = {'CENTER', 'UIParent', 'CENTER', -210, -42}
 })
 
-addon:Buff({
-	spellID = 5171, -- Slice and Dice
-	position = {'CENTER', 'UIParent', 'CENTER', -210, 0},
-	hideOutOfCombat = true,
-	movable = false,
+-- Slice and Dice
+addon:Buff(5171, {
+	position = {'CENTER', 'UIParent', 'CENTER', -210, 0}
 })
 
-addon:Buff({
-	spellID = 32645, -- Envenom
+-- Envenom
+addon:Buff(32645, {
 	spec = 1,
-	position = {'CENTER', 'UIParent', 'CENTER', -210, -84},
-	hideOutOfCombat = true,
-	movable = false,
+	position = {'CENTER', 'UIParent', 'CENTER', -210, -84}
 })
