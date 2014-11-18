@@ -5,17 +5,17 @@
 
 nSpellTracker.lua
 
-#classes\deathknight.lua
+classes\deathknight.lua
 classes\druid.lua
-#classes\hunter.lua
-#classes\mage.lua
-#classes\monk.lua
-#classes\paladin.lua
-#classes\priest.lua
-#classes\rogue.lua
-#classes\shaman.lua
+classes\hunter.lua
+classes\mage.lua
+classes\monk.lua
+classes\paladin.lua
+classes\priest.lua
+classes\rogue.lua
+classes\shaman.lua
 classes\warlock.lua
-#classes\warrior.lua
-#classes\everyone.lua
+classes\warrior.lua
+classes\everyone.lua
 
 events.lua
