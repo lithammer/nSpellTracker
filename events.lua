@@ -22,7 +22,7 @@ local function ScanAuras()
                 aura.Icon.Count:SetText(count)
             end
 
-            if expirationTime ~= aura._triggerTime then
+            if aura:IsUsable() or addon:Round(expirationTime) ~= addon:Round(aura._triggerTime) then
                 aura._triggerTime = expirationTime
                 aura.Icon.Cooldown:SetCooldown(now, expirationTime - now)
             end
@@ -75,7 +75,8 @@ for _, e in pairs({
     'SPELL_UPDATE_COOLDOWN',
     'SPELL_UPDATE_USABLE',
     'PLAYER_REGEN_DISABLED',
-    'PLAYER_REGEN_ENABLED'
+    'PLAYER_REGEN_ENABLED',
+    'PLAYER_TARGET_CHANGED'
 }) do
     f:RegisterEvent(e)
 end

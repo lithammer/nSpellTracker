@@ -134,7 +134,7 @@ function spell:CreateIcon()
 end
 
 function spell:IsUsable()
-    return self.Icon.Cooldown:GetCooldownDuration() > 0
+    return self.Icon.Cooldown:GetCooldownDuration() == 0
 end
 
 function spell:SetVisibility()
@@ -152,6 +152,9 @@ function spell:SetVisibility()
         alpha = 0
     end
 
+    self.Icon.Cooldown:SetSwipeColor(0, 0, 0, alpha)
+    self.Icon.Cooldown:SetDrawEdge(alpha > 0)
+    self.Icon.Cooldown:SetDrawBling(alpha > 0)
     self.Icon:SetAlpha(alpha)
 
     self._show = false
