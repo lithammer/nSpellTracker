@@ -199,22 +199,25 @@ addon:Cooldown({
 	}
 })
 
-addon:Cooldown({
-	spellID = 111898, -- Grimoire: Felguard
-	spec = 2,
-	position = {'CENTER', 'UIParent', 'CENTER', -294, 0},
-	movable = false,
-	alpha = {
-		cooldown = {
-			frame = 0.8,
-			icon = 0.4,
-		},
-		notCooldown = {
-			frame = 0.8,
-			icon = 0.8,
+local hasGrimoireOfService = select(4, GetTalentInfo(5, 2, GetSpecialization()))
+if hasGrimoireOfService then
+	addon:Cooldown({
+		spellID = 111898, -- Grimoire: Felguard
+		spec = 2,
+		position = {'CENTER', 'UIParent', 'CENTER', -294, 0},
+		movable = false,
+		alpha = {
+			cooldown = {
+				frame = 0.8,
+				icon = 0.4,
+			},
+			notCooldown = {
+				frame = 0.8,
+				icon = 0.8,
+			}
 		}
-	}
-})
+	})
+end
 
 addon:Cooldown({
 	spellID = 17962, -- Conflagrate
