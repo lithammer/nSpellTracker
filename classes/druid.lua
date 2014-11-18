@@ -2,13 +2,13 @@ local _, addon = ...
 if addon.playerClass ~= 'DRUID' then return end
 
 -- Moonfire
-addon:Debuff(8921, {
+addon:Debuff(164812, {
     spec = 1,
     position = {'CENTER', 'UIParent', 'CENTER', -210, 0}
 })
 
 -- Sunfire
-addon:Debuff(93402, {
+addon:Debuff(164815, {
     spec = 1,
     position = {'CENTER', 'UIParent', 'CENTER', -210, -42}
 })
