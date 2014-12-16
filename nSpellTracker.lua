@@ -29,7 +29,7 @@ function addon:Cooldown(spellId, config)
     cd.desaturate = true
     cd:UpdateConfig(config)
     cd:CreateIcon()
-    table.insert(addon.cooldowns, cd)
+    table.insert(self.cooldowns, cd)
 end
 
 -- Private

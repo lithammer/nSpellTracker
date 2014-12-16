@@ -22,7 +22,7 @@ local function ScanAuras()
                 aura.Icon.Count:SetText(count)
             end
 
-            if aura:IsUsable() or addon:Round(expirationTime) ~= addon:Round(aura._triggerTime) then
+            if aura:IsUsable() or addon.Round(expirationTime) ~= addon.Round(aura._triggerTime) then
                 aura._triggerTime = expirationTime
                 aura.Icon.Cooldown:SetCooldown(now, expirationTime - now)
 
@@ -64,7 +64,7 @@ local function ScanCooldowns()
             aura:SetVisibility()
 
             if duration and aura.PostUpdateHook then
-                aura:PostUpdateHook(expirationTime)
+                aura:PostUpdateHook(start, duration)
             end
         end
     end
