@@ -99,27 +99,27 @@ function spell:CreateIcon()
     local texture = self.Icon:CreateTexture(nil, 'BACKGROUND', nil, -6)
     texture:SetAllPoints(self.Icon)
     texture:SetTexture(image)
-    texture:SetTexCoord(0.1, 0.9, 0.1, 0.9)
     self.Icon.Texture = texture
 
     -- Create border
     -- if self.Icon.CreateBeautyBorder then
-    --     self.Icon.Texture:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-    --     self.Icon:CreateBeautyBorder(11)
+    --     self.Icon:CreateBeautyBorder(12)
     -- end
 
     -- Create border glow
-    -- local glow = self.Icon:CreateTexture(nil, 'BACKGROUND', nil, -8)
-    -- glow:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_glow')
-    -- glow:SetVertexColor(0, 0, 0, 1)
-    -- self.Icon.Glow = glow
+    local glow = self.Icon:CreateTexture(nil, 'BACKGROUND', nil, -8)
+    glow:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_glow')
+    glow:SetVertexColor(0, 0, 0, 1)
+    glow:SetPoint('TOPLEFT', self.Icon, 'TOPLEFT', -self.size*3.3/32, self.size*3.3/32)
+    glow:SetPoint('BOTTOMRIGHT', self.Icon, 'BOTTOMRIGHT', self.size*3.3/32, -self.size*3.3/32)
+    self.Icon.Glow = glow
 
     -- Create border
-    -- local border = self.Icon:CreateTexture(nil, 'BACKGROUND', nil, -4)
-    -- border:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_roth')
-    -- border:SetVertexColor(0.37, 0.3, 0.3, 1)
-    -- border:SetAllPoints(self.Icon)
-    -- self.Icon.Border = border
+    local border = self.Icon:CreateTexture(nil, 'BACKGROUND', nil, -4)
+    border:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_roth')
+    border:SetVertexColor(0.37, 0.3, 0.3, 1)
+    border:SetAllPoints(self.Icon)
+    self.Icon.Border = border
 
     -- Stacks/count
     local count = self.Icon:CreateFontString(nil, 'OVERLAY')
@@ -152,7 +152,7 @@ function spell:SetVisibility()
         alpha = 0
     end
 
-    self.Icon.Cooldown:SetSwipeColor(0, 0, 0, alpha)
+    self.Icon.Cooldown:SetSwipeColor(0, 0, 0, alpha * 0.8)
     self.Icon.Cooldown:SetDrawEdge(alpha > 0)
     self.Icon.Cooldown:SetDrawBling(alpha > 0)
     self.Icon:SetAlpha(alpha)

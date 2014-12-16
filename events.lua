@@ -3,10 +3,10 @@ local _, addon = ...
 local function GetSpell(aura)
     for _, spellId in pairs(aura._spellIds) do
         local name, _, icon = GetSpellInfo(spellId)
-        local _, _, _, count, _, _, expirationTime, _, _, _, found, _, _, isCastByPlayer = UnitAura(aura.unit, name, nil, aura._filter)
+        local _, _, _, count, debuffType, _, expirationTime, _, _, _, found, _, _, isCastByPlayer = UnitAura(aura.unit, name, nil, aura._filter)
 
         if found then
-            return found, icon, count, expirationTime, isCastByPlayer
+            return found, icon, count, expirationTime, isCastByPlayer, debuffType
         end
     end
 end
@@ -15,7 +15,7 @@ local function ScanAuras()
     local now = GetTime()
 
     for _, aura in pairs(addon.auras) do
-        local found, icon, count, expirationTime, isCastByPlayer = GetSpell(aura)
+        local found, icon, count, expirationTime, isCastByPlayer, debuffType = GetSpell(aura)
 
         if found and (aura.isMine and isCastByPlayer) then
             if count > 0 then
@@ -25,13 +25,18 @@ local function ScanAuras()
             if aura:IsUsable() or addon:Round(expirationTime) ~= addon:Round(aura._triggerTime) then
                 aura._triggerTime = expirationTime
                 aura.Icon.Cooldown:SetCooldown(now, expirationTime - now)
-            end
 
-            if icon ~= aura.Icon.Texture:GetTexture() then
-                aura.Icon.Texture:SetTexture(icon)
+                if icon ~= aura.Icon.Texture:GetTexture() then
+                    aura.Icon.Texture:SetTexture(icon)
+                end
             end
 
             aura._show = true
+        end
+
+        if debuffType then
+            local color = DebuffTypeColor[debuffType]
+            aura.Icon.Border:SetVertexColor(color.r, color.g, color.b)
         end
 
         aura:SetVisibility()
@@ -44,21 +49,23 @@ end
 
 local function ScanCooldowns()
     for _, aura in pairs(addon.cooldowns) do
-        -- Since related cooldowns trigger eachother we naively pick the first one
-        local start, duration = GetSpellCooldown(aura._spellIds[1])
+        if aura:IsCurrentSpec() then
+            -- Since related cooldowns trigger eachother we naively pick the first one
+            local start, duration = GetSpellCooldown(aura._spellIds[1])
 
-        if duration > 2 then
-            if start > aura._triggerTime then
-                aura._triggerTime = start
-                aura.Icon.Cooldown:SetCooldown(start, duration)
+            if duration > 2 then
+                if start > aura._triggerTime then
+                    aura._triggerTime = start
+                    aura.Icon.Cooldown:SetCooldown(start, duration)
+                end
+                aura._show = true
             end
-            aura._show = true
-        end
 
-        aura:SetVisibility()
+            aura:SetVisibility()
 
-        if duration and aura.PostUpdateHook then
-            aura:PostUpdateHook(expirationTime)
+            if duration and aura.PostUpdateHook then
+                aura:PostUpdateHook(expirationTime)
+            end
         end
     end
 end
