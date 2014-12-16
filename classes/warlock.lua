@@ -8,6 +8,12 @@ addon:Debuff(48181, {
     position = {'CENTER', 'UIParent', 'CENTER', -252, 42}
 })
 
+-- Soulburn: Haunt
+addon:Buff(157698, {
+    spec = 1,
+    position = {'CENTER', 'UIParent', 'CENTER', -252, 0}
+})
+
 -- Unstable Affliction
 addon:Debuff(30108, {
     spec = 1,
@@ -32,12 +38,6 @@ addon:Debuff(980, {
     position = {'CENTER', 'UIParent', 'CENTER', -210, -42}
 })
 
--- Shadowflame
-addon:Debuff(47960, {
-    spec = 2,
-    position = {'CENTER', 'UIParent', 'CENTER', -252, 42}
-})
-
 -- Doom
 addon:Debuff(603, {
     spec = 2,
@@ -56,22 +56,15 @@ addon:Buff(111400, {
     hideOutOfCombat = false
 })
 
--- Dark Soul: Misery
-addon:Cooldown(113860, {
+-- Dark Soul
+addon:Cooldown({113858, 113860, 113860}, {
     position = {'CENTER', 'UIParent', 'CENTER', -294, 42},
     spec = 1,
 })
 
--- Dark Soul: Knowledge
-addon:Cooldown(113861, {
-    position = {'CENTER', 'UIParent', 'CENTER', -294, 42},
-    spec = 2
-})
-
--- Dark Soul: Instability
-addon:Cooldown(113858, {
-    position = {'CENTER', 'UIParent', 'CENTER', -294, 42},
-    spec = 3
+-- Dark Soul (buff)
+addon:Buff({113858, 113860, 113861}, {
+	position = {'CENTER', 'UIParent', 'CENTER', 150, 42}
 })
 
 -- Grimoire: Felguard
@@ -89,11 +82,37 @@ addon:Cooldown(17962, {
 -- Hand of Gul'dan
 addon:Cooldown(105174, {
     spec = 2,
+    position = {'CENTER', 'UIParent', 'CENTER', -252, 42}
+})
+
+-- Shadowflame
+addon:Debuff(47960, {
+    spec = 2,
     position = {'CENTER', 'UIParent', 'CENTER', -210, 42}
 })
 
--- Wrathstorm, Felstorm
-addon:Cooldown({119914, 119915}, {
+-- Demonbolt
+addon:Debuff(157695, {
+    spec = 2,
+    position = {'CENTER', 'UIParent', 'CENTER', -252, 0},
+    unit = 'player'
+})
+
+-- Wrathstorm
+addon:Cooldown(119915, {
     spec = 2,
     position = {'CENTER', 'UIParent', 'CENTER', -210, 84}
+})
+
+-- Felstorm
+addon:Cooldown(119914, {
+    spec = 2,
+    position = {'CENTER', 'UIParent', 'CENTER', -210, 84}
+})
+
+-- Trinkets
+
+-- Munificent Orb of Ice
+addon:Buff(165833, {
+	position = {'CENTER', 'UIParent', 'CENTER', 150, 0}
 })
