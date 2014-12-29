@@ -3,10 +3,10 @@ local _, addon = ...
 local function GetSpell(aura)
     for _, spellId in pairs(aura._spellIds) do
         local name, _, icon = GetSpellInfo(spellId)
-        local _, _, _, count, debuffType, _, expirationTime, _, _, _, found, _, _, isCastByPlayer = UnitAura(aura.unit, name, nil, aura._filter)
+        local _, _, _, count, debuffType, _, expirationTime, caster, _, _, found = UnitAura(aura.unit, name, nil, aura._filter)
 
         if found then
-            return found, icon, count, expirationTime, isCastByPlayer, debuffType
+            return found, icon, count, expirationTime, caster, debuffType
         end
     end
 end
@@ -15,9 +15,9 @@ local function ScanAuras()
     local now = GetTime()
 
     for _, aura in pairs(addon.auras) do
-        local found, icon, count, expirationTime, isCastByPlayer, debuffType = GetSpell(aura)
+        local found, icon, count, expirationTime, caster, debuffType = GetSpell(aura)
 
-        if found and (aura.isMine and isCastByPlayer) then
+        if found and aura.caster == caster then
             if count > 0 then
                 aura.Icon.Count:SetText(count)
             end

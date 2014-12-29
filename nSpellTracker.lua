@@ -52,7 +52,7 @@ function spell.New(spellId, filter)
     -- Set default values
     t.desaturate = false
     t.hideOutOfCombat = false
-    t.isMine = true
+    t.caster = 'player'
     t.position = {'CENTER'}
     t.size = 36
     t.spec = nil
