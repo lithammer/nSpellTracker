@@ -11,18 +11,20 @@ addon:Debuff(48181, {
 -- Soulburn: Haunt
 addon:Buff(157698, {
     spec = 1,
-    position = {'CENTER', 'UIParent', 'CENTER', -252, 0}
+    position = {'CENTER', 'UIParent', 'CENTER', -252, 0},
+    PostUpdateHook = function(self, expirationTime, count)
+	local shards = UnitPower('player', SPELL_POWER_SOUL_SHARDS)
+	if shards > 1 then
+            self.Icon.Count:SetText(shards)
+	else
+            self.Icon.Count:SetText('')
+	end
+    end
 })
 
 -- Unstable Affliction
 addon:Debuff(30108, {
     spec = 1,
-    position = {'CENTER', 'UIParent', 'CENTER', -210, 42}
-})
-
--- Immolate
-addon:Debuff(348, {
-    spec = 3,
     position = {'CENTER', 'UIParent', 'CENTER', -210, 42}
 })
 
@@ -36,6 +38,12 @@ addon:Debuff(172, {
 addon:Debuff(980, {
     spec = 1,
     position = {'CENTER', 'UIParent', 'CENTER', -210, -42}
+})
+
+-- Immolate
+addon:Debuff(348, {
+    spec = 3,
+    position = {'CENTER', 'UIParent', 'CENTER', -210, 42}
 })
 
 -- Doom
@@ -64,7 +72,13 @@ addon:Cooldown({113858, 113860, 113860}, {
 
 -- Dark Soul (buff)
 addon:Buff({113858, 113860, 113861}, {
-	position = {'CENTER', 'UIParent', 'CENTER', 150, 42}
+    position = {'CENTER', 'UIParent', 'CENTER', 150, 42}
+})
+
+-- Grimoire: Synergy
+addon:Buff(171982, {
+    caster = 'pet',
+    position = {'CENTER', 'UIParent', 'CENTER', 150, 84}
 })
 
 -- Grimoire: Felguard
@@ -112,7 +126,7 @@ addon:Cooldown(119914, {
 
 -- Trinkets
 
--- Munificent Orb of Ice
-addon:Buff(165833, {
-	position = {'CENTER', 'UIParent', 'CENTER', 150, 0}
+-- Furyheart Talisman (Heart of the Fury)
+addon:Buff(176980, {
+    position = {'CENTER', 'UIParent', 'CENTER', 150, 0}
 })
