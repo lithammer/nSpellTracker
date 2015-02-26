@@ -47,7 +47,8 @@ function spell.New(spellId, filter)
     -- Internal values
     t._spellIds = spellId
     t._filter = filter
-    t._triggerTime = GetTime()
+    t._expirationTime = GetTime()  -- For {de}buffs
+    t._startTime = GetTime()       -- For cooldowns
 
     -- Set default values
     t.desaturate = false
@@ -70,11 +71,9 @@ function spell.New(spellId, filter)
 end
 
 function spell:UpdateConfig(config)
-    if type(config) == 'table' then
-        for k, v in pairs(config) do
-            if self[k] then
-                self[k] = v
-            end
+    for k, v in pairs(config) do
+        if self[k] or k == 'PostUpdateHook' then
+            self[k] = v
         end
     end
 end

@@ -1,12 +1,12 @@
 local _, addon = ...
 
 local function GetSpell(aura)
-    for _, spellId in pairs(aura._spellIds) do
-        local name, _, icon = GetSpellInfo(spellId)
-        local _, _, _, count, debuffType, _, expirationTime, caster, _, _, found = UnitAura(aura.unit, name, nil, aura._filter)
+    for _, id in pairs(aura._spellIds) do
+        local name, _, icon = GetSpellInfo(id)
+        local _, _, _, count, debuffType, duration, expirationTime, caster, _, _, spellId = UnitAura(aura.unit, name, nil, aura._filter)
 
-        if found then
-            return found, icon, count, expirationTime, caster, debuffType
+        if spellId then
+            return spellId, icon, count, duration, expirationTime, caster, debuffType
         end
     end
 end
@@ -15,15 +15,15 @@ local function ScanAuras()
     local now = GetTime()
 
     for _, aura in pairs(addon.auras) do
-        local found, icon, count, expirationTime, caster, debuffType = GetSpell(aura)
+        local spellId, icon, count, duration, expirationTime, caster, debuffType = GetSpell(aura)
 
-        if found and aura.caster == caster then
+        if spellId and aura.caster == caster then
             if count > 0 then
                 aura.Icon.Count:SetText(count)
             end
 
-            if aura:IsUsable() or addon.Round(expirationTime) ~= addon.Round(aura._triggerTime) then
-                aura._triggerTime = expirationTime
+            if aura:IsUsable() or addon.Round(expirationTime) ~= addon.Round(aura._expirationTime) then
+                aura._expirationTime = expirationTime
                 aura.Icon.Cooldown:SetCooldown(now, expirationTime - now)
 
                 if icon ~= aura.Icon.Texture:GetTexture() then
@@ -34,14 +34,23 @@ local function ScanAuras()
             aura._show = true
         end
 
+        -- Use debuff type as border color (if available)
         if debuffType then
             local color = DebuffTypeColor[debuffType]
             aura.Icon.Border:SetVertexColor(color.r, color.g, color.b)
         end
 
+        -- Change border color when a DoT is safe to refresh
+        if aura._filter == 'HARMFUL' and caster == 'player' and duration then
+            local refreshThreshold = 0.3
+            if expirationTime - now < duration * refreshThreshold then
+                aura.Icon.Border:SetVertexColor(1, 1, 0)
+            end
+        end
+
         aura:SetVisibility()
 
-        if found and aura.PostUpdateHook then
+        if spellId and aura.PostUpdateHook then
             aura:PostUpdateHook(expirationTime, count)
         end
     end
@@ -53,9 +62,11 @@ local function ScanCooldowns()
             -- Since related cooldowns trigger eachother we naively pick the first one
             local start, duration = GetSpellCooldown(aura._spellIds[1])
 
+            local charges, maxCharges, _, _ = GetSpellCharges(aura._spellIds[0])
+
             if duration > 2 then
-                if start > aura._triggerTime then
-                    aura._triggerTime = start
+                if start > aura._startTime then
+                    aura._startTime = start
                     aura.Icon.Cooldown:SetCooldown(start, duration)
                 end
                 aura._show = true
