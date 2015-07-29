@@ -7,3 +7,15 @@ addon:Buff(132404, {
     spec = 3,
     size = 52
 })
+
+-- Rend
+addon:Debuff(772, {
+    position = {'CENTER', 'UIParent', 'CENTER', -210, 42},
+	spec = 1
+})
+
+-- Colossus Smash
+addon:Debuff(167105, {
+    position = {'CENTER', 'UIParent', 'CENTER', -210, 0},
+	spec = 1
+})
