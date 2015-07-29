@@ -126,7 +126,7 @@ addon:Cooldown(119914, {
 
 -- Trinkets
 
--- Furyheart Talisman (Heart of the Fury)
-addon:Buff(176980, {
+-- Shards of Nothing
+addon:Buff(176875, {
     position = {'CENTER', 'UIParent', 'CENTER', 150, 0}
 })
