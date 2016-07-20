@@ -3,23 +3,14 @@ local _, addon = ...
 if addon.playerClass ~= 'WARLOCK' then return end
 
 -- Haunt
-addon:Debuff(48181, {
+addon:Cooldown(48181, {
     spec = 1,
     position = {'CENTER', 'UIParent', 'CENTER', -252, 42}
 })
 
--- Soulburn: Haunt
-addon:Buff(157698, {
-    spec = 1,
-    position = {'CENTER', 'UIParent', 'CENTER', -252, 0},
-    PostUpdateHook = function(self, expirationTime, count)
-	local shards = UnitPower('player', SPELL_POWER_SOUL_SHARDS)
-	if shards > 1 then
-            self.Icon.Count:SetText(shards)
-	else
-            self.Icon.Count:SetText('')
-	end
-    end
+-- Grimoire: Imp
+addon:Cooldown(111859, {
+    position = {'CENTER', 'UIParent', 'CENTER', -252, 0}
 })
 
 -- Unstable Affliction
@@ -40,6 +31,12 @@ addon:Debuff(980, {
     position = {'CENTER', 'UIParent', 'CENTER', -210, -42}
 })
 
+-- Siphon Life
+addon:Debuff(63106, {
+    spec = 1,
+    position = {'CENTER', 'UIParent', 'CENTER', -210, -84}
+})
+
 -- Immolate
 addon:Debuff(348, {
     spec = 3,
@@ -52,39 +49,10 @@ addon:Debuff(603, {
     position = {'CENTER', 'UIParent', 'CENTER', -210, -42}
 })
 
--- Backdraft
-addon:Buff(117896, {
-    spec = 3,
-    position = {'CENTER', 'UIParent', 'CENTER', -252, 0}
-})
-
 -- Burning Rush
 addon:Buff(111400, {
     position = {'CENTER', 'UIParent', 'CENTER', 100, -42},
     hideOutOfCombat = false
-})
-
--- Dark Soul
-addon:Cooldown({113858, 113860, 113860}, {
-    position = {'CENTER', 'UIParent', 'CENTER', -294, 42},
-    spec = 1,
-})
-
--- Dark Soul (buff)
-addon:Buff({113858, 113860, 113861}, {
-    position = {'CENTER', 'UIParent', 'CENTER', 150, 42}
-})
-
--- Grimoire: Synergy
-addon:Buff(171982, {
-    caster = 'pet',
-    position = {'CENTER', 'UIParent', 'CENTER', 150, 84}
-})
-
--- Grimoire: Felguard
-addon:Cooldown(111898, {
-    spec = 2,
-    position = {'CENTER', 'UIParent', 'CENTER', -294, 0}
 })
 
 -- Conflagrate
@@ -93,14 +61,27 @@ addon:Cooldown(17962, {
     position = {'CENTER', 'UIParent', 'CENTER', -252, 42}
 })
 
--- Hand of Gul'dan
-addon:Cooldown(105174, {
+-- Backdraft
+addon:Buff(117828, {
+    spec = 3,
+    position = {'CENTER', 'UIParent', 'CENTER', -252, 0}
+})
+
+-- Demonic Empowerment
+addon:Buff(193396, {
     spec = 2,
+    unit = 'pet',
     position = {'CENTER', 'UIParent', 'CENTER', -252, 42}
 })
 
+-- Demonic Calling
+addon:Buff(205146, {
+    spec = 2,
+    position = {'CENTER', 'UIParent', 'CENTER', 150, 42}
+})
+
 -- Shadowflame
-addon:Debuff(47960, {
+addon:Debuff(205181, {
     spec = 2,
     position = {'CENTER', 'UIParent', 'CENTER', -210, 42}
 })
@@ -112,17 +93,6 @@ addon:Debuff(157695, {
     unit = 'player'
 })
 
--- Wrathstorm
-addon:Cooldown(119915, {
-    spec = 2,
-    position = {'CENTER', 'UIParent', 'CENTER', -210, 84}
-})
-
--- Felstorm
-addon:Cooldown(119914, {
-    spec = 2,
-    position = {'CENTER', 'UIParent', 'CENTER', -210, 84}
-})
 
 -- Trinkets
 
