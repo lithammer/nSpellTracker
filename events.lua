@@ -1,7 +1,7 @@
 local _, addon = ...
 
 local function GetSpell(aura)
-    local name, _, icon = GetSpellInfo(aura.spellId)
+    local name, _, icon = GetSpellInfo(aura._spellId)
     local _, _, _, count, debuffType, duration, expirationTime, caster, _, _, spellId = UnitAura(aura.unit, name, nil, aura._filter)
 
     if spellId then
@@ -49,7 +49,7 @@ local function ScanAuras()
         aura:SetVisibility()
 
         if spellId and aura.PostUpdateHook then
-            aura:PostUpdateHook(expirationTime, count)
+            aura:PostUpdateHook(aura.Icon)
         end
     end
 end
@@ -73,7 +73,7 @@ local function ScanCooldowns()
             aura:SetVisibility()
 
             if duration and aura.PostUpdateHook then
-                aura:PostUpdateHook(start, duration)
+                aura:PostUpdateHook(aura.Icon)
             end
         end
     end

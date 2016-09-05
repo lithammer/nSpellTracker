@@ -40,10 +40,6 @@ function spell.New(spellId, filter)
     local t = {}
     setmetatable(t, spell)
 
-    if type(spellId) ~= 'table' then
-        spellId = {spellId}
-    end
-
     -- Internal values
     t._spellId = spellId
     t._filter = filter
@@ -54,7 +50,7 @@ function spell.New(spellId, filter)
     t.caster = 'player'
     t.desaturate = false
     t.glowOverlay = true
-    t.hideOutOfCombat = false
+    t.hideOutOfCombat = true
     t.position = {'CENTER'}
     t.size = 36
     t.spec = nil
@@ -63,7 +59,7 @@ function spell.New(spellId, filter)
 
     t.alpha = {
         active = 1,
-        inactive = 1
+        inactive = 0.4
     }
 
     return t
@@ -142,20 +138,16 @@ function spell:SetVisibility()
         self.Icon.Texture:SetDesaturated(not self:IsUsable())
     end
 
-    if not InCombatLockdown() and self.hideOutOfCombat then
-        alpha = 0
-
-        if self._filter == nil and not self:IsUsable() then
-            alpha = self.alpha.active
-        end
-    end
-
-    if not self:IsCurrentSpec() then
+    if self.hideOutOfCombat and not InCombatLockdown() then
         alpha = 0
     end
 
-    if not GetSpellInfo(self._spellId) then
+    if not (self:IsCurrentSpec() and FindSpellBookSlotBySpellID(self._spellId)) then
         alpha = 0
+    end
+
+    if alpha <= self.alpha.inactive then
+        self.Icon.Cooldown:SetCooldown(0, 0)
     end
 
     self.Icon.Cooldown:SetSwipeColor(0, 0, 0, alpha * 0.8)
