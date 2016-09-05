@@ -1,13 +1,11 @@
 local _, addon = ...
 
 local function GetSpell(aura)
-    for _, id in pairs(aura._spellIds) do
-        local name, _, icon = GetSpellInfo(id)
-        local _, _, _, count, debuffType, duration, expirationTime, caster, _, _, spellId = UnitAura(aura.unit, name, nil, aura._filter)
+    local name, _, icon = GetSpellInfo(aura.spellId)
+    local _, _, _, count, debuffType, duration, expirationTime, caster, _, _, spellId = UnitAura(aura.unit, name, nil, aura._filter)
 
-        if spellId then
-            return spellId, icon, count, duration, expirationTime, caster, debuffType
-        end
+    if spellId then
+        return spellId, icon, count, duration, expirationTime, caster, debuffType
     end
 end
 
@@ -60,9 +58,9 @@ local function ScanCooldowns()
     for _, aura in pairs(addon.cooldowns) do
         if aura:IsCurrentSpec() then
             -- Since related cooldowns trigger eachother we naively pick the first one
-            local start, duration = GetSpellCooldown(aura._spellIds[1])
+            local start, duration = GetSpellCooldown(aura._spellId)
 
-            local charges, maxCharges, _, _ = GetSpellCharges(aura._spellIds[0])
+            local charges, maxCharges, _, _ = GetSpellCharges(aura._spellId)
 
             if duration > 2 then
                 if start > aura._startTime then

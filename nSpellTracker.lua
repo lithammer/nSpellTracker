@@ -45,15 +45,16 @@ function spell.New(spellId, filter)
     end
 
     -- Internal values
-    t._spellIds = spellId
+    t._spellId = spellId
     t._filter = filter
     t._expirationTime = GetTime()  -- For {de}buffs
     t._startTime = GetTime()       -- For cooldowns
 
     -- Set default values
-    t.desaturate = false
-    t.hideOutOfCombat = false
     t.caster = 'player'
+    t.desaturate = false
+    t.glowOverlay = true
+    t.hideOutOfCombat = false
     t.position = {'CENTER'}
     t.size = 36
     t.spec = nil
@@ -61,10 +62,8 @@ function spell.New(spellId, filter)
     t.visibilityState = '[petbattle] [vehicleui] hide; show'
 
     t.alpha = {
-        found = 1,
-        notFound = 0.4,
-        cooldown = 0.6,
-        notCooldown = 1
+        active = 1,
+        inactive = 1
     }
 
     return t
@@ -81,7 +80,7 @@ end
 function spell:CreateIcon()
     -- Just use the first available texture, will be updated in
     -- Scan{Auras,Cooldowns} later on
-    local _, _, image = GetSpellInfo(self._spellIds[1])
+    local _, _, image = GetSpellInfo(self._spellId)
 
     self.Icon = CreateFrame('Frame', self:GetName(), UIParent, 'SecureHandlerStateTemplate')
     self.Icon:SetPoint(unpack(self.position))
@@ -127,9 +126,9 @@ function spell:CreateIcon()
     self.Icon.Count = count
 
     -- Set visibility
-    if self.visibilityState then
-        -- RegisterStateDriver(self.Icon, 'visibility', self.visibilityState)
-    end
+    -- if self.visibilityState then
+    --     RegisterStateDriver(self.Icon, 'visibility', self.visibilityState)
+    -- end
 end
 
 function spell:IsUsable()
@@ -137,7 +136,7 @@ function spell:IsUsable()
 end
 
 function spell:SetVisibility()
-    local alpha = self._show and 1 or 0
+    local alpha = self._show and self.alpha.active or self.alpha.inactive
 
     if self.desaturate then
         self.Icon.Texture:SetDesaturated(not self:IsUsable())
@@ -145,9 +144,17 @@ function spell:SetVisibility()
 
     if not InCombatLockdown() and self.hideOutOfCombat then
         alpha = 0
+
+        if self._filter == nil and not self:IsUsable() then
+            alpha = self.alpha.active
+        end
     end
 
     if not self:IsCurrentSpec() then
+        alpha = 0
+    end
+
+    if not GetSpellInfo(self._spellId) then
         alpha = 0
     end
 
@@ -156,11 +163,17 @@ function spell:SetVisibility()
     self.Icon.Cooldown:SetDrawBling(alpha > 0)
     self.Icon:SetAlpha(alpha)
 
+    if self.glowOverlay and alpha > 0 and IsSpellOverlayed(self._spellId) then
+        ActionButton_ShowOverlayGlow(self.Icon)
+    else
+        ActionButton_HideOverlayGlow(self.Icon)
+    end
+
     self._show = false
 end
 
 function spell:GetName()
-    return string.format('%s%s%s', 'nSpellTracker', #addon.auras, self._spellIds[1])
+    return string.format('%s%s%s', 'nSpellTracker', #addon.auras, self._spellId)
 end
 
 function spell:IsCurrentSpec()
