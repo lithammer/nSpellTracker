@@ -8,8 +8,8 @@ addon:Cooldown(48181, {
     position = {'CENTER', 'UIParent', 'CENTER', -252, 42}
 })
 
--- Grimoire: Imp
-addon:Cooldown(111859, {
+-- Grimoire: Felhunter
+addon:Cooldown(111897, {
     position = {'CENTER', 'UIParent', 'CENTER', -252, 0}
 })
 
@@ -21,7 +21,7 @@ addon:Debuff(30108, {
 
 -- Corruption
 addon:Debuff(172, {
-    spec = {1, 2},
+    spec = 1,
     position = {'CENTER', 'UIParent', 'CENTER', -210, 0}
 })
 
@@ -41,12 +41,6 @@ addon:Debuff(63106, {
 addon:Debuff(348, {
     spec = 3,
     position = {'CENTER', 'UIParent', 'CENTER', -210, 42}
-})
-
--- Doom
-addon:Debuff(603, {
-    spec = 2,
-    position = {'CENTER', 'UIParent', 'CENTER', -210, -42}
 })
 
 -- Burning Rush
@@ -71,7 +65,13 @@ addon:Buff(117828, {
 addon:Buff(193396, {
     spec = 2,
     unit = 'pet',
-    position = {'CENTER', 'UIParent', 'CENTER', -252, 42}
+    position = {'CENTER', 'UIParent', 'CENTER', -210, 0}
+})
+
+-- Doom
+addon:Debuff(603, {
+    spec = 2,
+    position = {'CENTER', 'UIParent', 'CENTER', -210, 42}
 })
 
 -- Demonic Calling
@@ -83,20 +83,20 @@ addon:Buff(205146, {
 -- Shadowflame
 addon:Debuff(205181, {
     spec = 2,
-    position = {'CENTER', 'UIParent', 'CENTER', -210, 42}
+    position = {'CENTER', 'UIParent', 'CENTER', -210, 84}
 })
 
--- Demonbolt
-addon:Debuff(157695, {
+-- Call Dradstalkers
+addon:Cooldown(104316, {
     spec = 2,
-    position = {'CENTER', 'UIParent', 'CENTER', -252, 0},
-    unit = 'player'
+    position = {'CENTER', 'UIParent', 'CENTER', -252, 42}
 })
 
 
 -- Trinkets
 
--- Shards of Nothing
-addon:Buff(176875, {
-    position = {'CENTER', 'UIParent', 'CENTER', 150, 0}
+-- Ulthalesh, Deadwind Harvester
+addon:Buff(216708, {
+    spec = 1,
+    position = {'CENTER', 'UIParent', 'CENTER', 150, 42}
 })

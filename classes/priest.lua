@@ -13,12 +13,6 @@ addon:Debuff(589, {
 	position = {'CENTER', 'UIParent', 'CENTER', -210, -42}
 })
 
--- Devouring Plague
-addon:Debuff(2944, {
-	spec = 3,
-	position = {'CENTER', 'UIParent', 'CENTER', -210, -84}
-})
-
 -- Mind Blast
 addon:Cooldown(8092, {
 	spec = 3,
