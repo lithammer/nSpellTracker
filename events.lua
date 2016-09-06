@@ -22,7 +22,9 @@ local function ScanAuras()
 
             if aura:IsUsable() or addon.Round(expirationTime) ~= addon.Round(aura._expirationTime) then
                 aura._expirationTime = expirationTime
-                aura.Icon.Cooldown:SetCooldown(now, expirationTime - now)
+                if expirationTime > 0 then
+                    aura.Icon.Cooldown:SetCooldown(now, expirationTime - now)
+                end
 
                 if icon ~= aura.Icon.Texture:GetTexture() then
                     aura.Icon.Texture:SetTexture(icon)

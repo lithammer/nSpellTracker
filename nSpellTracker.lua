@@ -4,39 +4,99 @@ addon.auras = {}
 addon.cooldowns = {}
 addon.playerClass = select(2, UnitClass('player'))
 
-local spell = {}
+local CreateIcon, TrackSpell, UpdateConfig
 
 -- Public methods
 
 function addon:Buff(spellId, config)
-    local aura = spell.New(spellId, 'HELPFUL')
-    aura.alpha.notFound = 0.4
-    aura:UpdateConfig(config)
-    aura:CreateIcon()
+    local aura = TrackSpell(spellId, 'HELPFUL')
+    UpdateConfig(aura, config)
+    CreateIcon(aura)
     table.insert(self.auras, aura)
 end
 
 function addon:Debuff(spellId, config)
-    local aura = spell.New(spellId, 'HARMFUL')
+    local aura = TrackSpell(spellId, 'HARMFUL')
     aura.unit = 'target'
-    aura:UpdateConfig(config)
-    aura:CreateIcon()
+    UpdateConfig(aura, config)
+    CreateIcon(aura)
     table.insert(self.auras, aura)
 end
 
 function addon:Cooldown(spellId, config)
-    local cd = spell.New(spellId, nil)
+    local cd = TrackSpell(spellId, nil)
     cd.desaturate = true
-    cd:UpdateConfig(config)
-    cd:CreateIcon()
+    UpdateConfig(cd, config)
+    CreateIcon(cd)
     table.insert(self.cooldowns, cd)
 end
 
 -- Private
 
+local spell = {}
 spell.__index = spell
 
-function spell.New(spellId, filter)
+function spell:IsUsable()
+    return self.Icon.Cooldown:GetCooldownDuration() == 0
+end
+
+function spell:SetVisibility()
+    local alpha = self._show and self.alpha.active or self.alpha.inactive
+
+    if self.desaturate then
+        if self._filter == nil then
+            self.Icon.Texture:SetDesaturated(not self:IsUsable())
+        else
+            self.Icon.Texture:SetDesaturated(not self._show)
+        end
+    end
+
+    if self.hideOutOfCombat and not InCombatLockdown() then
+        alpha = 0
+    end
+
+    if not (self:IsCurrentSpec() and FindSpellBookSlotBySpellID(self._spellId)) then
+        alpha = 0
+    end
+
+    if alpha <= self.alpha.inactive then
+        self.Icon.Cooldown:SetCooldown(0, 0)
+        self.Icon.Count:SetText()
+    end
+
+    self.Icon.Cooldown:SetSwipeColor(0, 0, 0, alpha * 0.8)
+    self.Icon.Cooldown:SetDrawEdge(alpha > 0)
+    self.Icon.Cooldown:SetDrawBling(alpha > 0)
+    self.Icon:SetAlpha(alpha)
+
+    if self.glowOverlay and alpha > 0 and IsSpellOverlayed(self._spellId) then
+        ActionButton_ShowOverlayGlow(self.Icon)
+    else
+        ActionButton_HideOverlayGlow(self.Icon)
+    end
+
+    self._show = false
+end
+
+function spell:IsCurrentSpec()
+    if type(self.spec) == 'table' then
+        for _, spec in pairs(self.spec) do
+            if spec == GetSpecialization() then
+                return true
+            end
+        end
+
+        return false
+    end
+
+    if type(self.spec) == 'string' then
+        return GetSpecialization() and GetSpecializationRole(GetSpecialization()) == self.spec
+    end
+
+    return self.spec == nil or self.spec == GetSpecialization()
+end
+
+TrackSpell = function(spellId, filter)
     local t = {}
     setmetatable(t, spell)
 
@@ -48,7 +108,7 @@ function spell.New(spellId, filter)
 
     -- Set default values
     t.caster = 'player'
-    t.desaturate = false
+    t.desaturate = true
     t.glowOverlay = true
     t.hideOutOfCombat = true
     t.position = {'CENTER'}
@@ -65,20 +125,24 @@ function spell.New(spellId, filter)
     return t
 end
 
-function spell:UpdateConfig(config)
-    for k, v in pairs(config) do
-        if self[k] or k == 'PostUpdateHook' then
-            self[k] = v
+UpdateConfig = function(old, new)
+    for k, v in pairs(new) do
+        if old[k] or k == 'PostUpdateHook' then
+            old[k] = v
         end
     end
 end
 
-function spell:CreateIcon()
+local function GetFrameName(spellId)
+    return string.format('%s%s%s', 'nSpellTracker', #addon.auras, spellId)
+end
+
+CreateIcon = function(self)
     -- Just use the first available texture, will be updated in
     -- Scan{Auras,Cooldowns} later on
     local _, _, image = GetSpellInfo(self._spellId)
 
-    self.Icon = CreateFrame('Frame', self:GetName(), UIParent, 'SecureHandlerStateTemplate')
+    self.Icon = CreateFrame('Frame', GetFrameName(self._spellId), UIParent, 'SecureHandlerStateTemplate')
     self.Icon:SetPoint(unpack(self.position))
     self.Icon:SetSize(self.size, self.size)
     self.Icon:SetAlpha(0)
@@ -122,66 +186,7 @@ function spell:CreateIcon()
     self.Icon.Count = count
 
     -- Set visibility
-    -- if self.visibilityState then
-    --     RegisterStateDriver(self.Icon, 'visibility', self.visibilityState)
-    -- end
-end
-
-function spell:IsUsable()
-    return self.Icon.Cooldown:GetCooldownDuration() == 0
-end
-
-function spell:SetVisibility()
-    local alpha = self._show and self.alpha.active or self.alpha.inactive
-
-    if self.desaturate then
-        self.Icon.Texture:SetDesaturated(not self:IsUsable())
+    if self.visibilityState then
+        RegisterStateDriver(self.Icon, 'visibility', self.visibilityState)
     end
-
-    if self.hideOutOfCombat and not InCombatLockdown() then
-        alpha = 0
-    end
-
-    if not (self:IsCurrentSpec() and FindSpellBookSlotBySpellID(self._spellId)) then
-        alpha = 0
-    end
-
-    if alpha <= self.alpha.inactive then
-        self.Icon.Cooldown:SetCooldown(0, 0)
-    end
-
-    self.Icon.Cooldown:SetSwipeColor(0, 0, 0, alpha * 0.8)
-    self.Icon.Cooldown:SetDrawEdge(alpha > 0)
-    self.Icon.Cooldown:SetDrawBling(alpha > 0)
-    self.Icon:SetAlpha(alpha)
-
-    if self.glowOverlay and alpha > 0 and IsSpellOverlayed(self._spellId) then
-        ActionButton_ShowOverlayGlow(self.Icon)
-    else
-        ActionButton_HideOverlayGlow(self.Icon)
-    end
-
-    self._show = false
-end
-
-function spell:GetName()
-    return string.format('%s%s%s', 'nSpellTracker', #addon.auras, self._spellId)
-end
-
-function spell:IsCurrentSpec()
-    if type(self.spec) == 'table' then
-        for _, spec in pairs(self.spec) do
-            if spec == GetSpecialization() then
-                return true
-            end
-        end
-
-        return false
-    end
-
-    if type(self.spec) == 'string' then
-        return GetSpecialization() and GetSpecializationRole(GetSpecialization()) == self.spec
-    end
-
-    return self.spec == nil or self.spec == GetSpecialization()
 end
