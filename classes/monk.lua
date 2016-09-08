@@ -1,5 +1,2 @@
-if select(2, UnitClass('player')) ~= 'MONK' then return end
-
 local _, addon = ...
-local playerName, _ = UnitName('player')
-
+if addon.playerClass ~= 'MONK' then return end

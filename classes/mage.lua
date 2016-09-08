@@ -1,79 +1,42 @@
-if select(2, UnitClass('player')) ~= 'MAGE' then return end
-
 local _, addon = ...
-local playerName, _ = UnitName('player')
+if addon.playerClass ~= 'MAGE' then return end
 
-addon:Debuff({
-	spellID = 44457, -- Living Bomb
-	spec = 2,
-	size = 50,
-	unit = 'target',
-	position = {'CENTER', 'UIParent', 'CENTER', 0, -250},
-	validateUnit = true,
-	hideOutOfCombat = true,
-	isMine = true,
-	desaturate = true,
-	movable = false,
+-- Living Bomb
+addon:Debuff(44457, {
+    spec = 2,
+    size = 50,
+    position = {'CENTER', 'UIParent', 'CENTER', 0, -250}
 })
 
-addon:Debuff({
-	spellID = 12654, -- Ignite
-	spec = 2,
-	size = 36,
-	unit = 'target',
-	position = {'CENTER', 'UIParent', 'CENTER', -50, -250},
-	validateUnit = true,
-	hideOutOfCombat = true,
-	isMine = true,
-	desaturate = true,
-	movable = false,
+-- Ignite
+addon:Debuff(12654, {
+    spec = 2,
+    position = {'CENTER', 'UIParent', 'CENTER', -50, -250}
 })
 
-addon:Debuff({
-	spellID = 11366, -- Pyroblast
-	spec = 2,
-	size = 36,
-	unit = 'target',
-	position = {'CENTER', 'UIParent', 'CENTER', 50, -250},
-	validateUnit = true,
-	hideOutOfCombat = true,
-	isMine = true,
-	desaturate = true,
-	movable = false,
+-- Pyroblast
+addon:Debuff(11366, {
+    spec = 2,
+    position = {'CENTER', 'UIParent', 'CENTER', 50, -250}
 })
 
-addon:Debuff({
-	spellID = 36032, -- Arcane Charge
-	spec = 1,
-	size = 50,
-	position = {'CENTER', 'UIParent', 'CENTER', 0, -250},
-	unit = 'player',
-	validateUnit = true,
-	hideOutOfCombat = true,
-	isMine = true,
-	desaturate = true,
-	movable = false,
+-- Arcane Charge
+addon:Debuff(36032, {
+    spec = 1,
+    size = 50,
+    position = {'CENTER', 'UIParent', 'CENTER', 0, -250},
+    unit = 'player'
 })
 
-addon:Debuff({
-	spellID = 114923, -- Nether Tempest
-	spec = 1,
-	size = 36,
-	unit = 'target',
-	position = {'CENTER', 'UIParent', 'CENTER', 50, -250},
-	validateUnit = true,
-	hideOutOfCombat = true,
-	isMine = true,
-	desaturate = true,
-	movable = false,
+-- Nether Tempest
+addon:Debuff(114923, {
+    spec = 1,
+    position = {'CENTER', 'UIParent', 'CENTER', 50, -250}
 })
 
-addon:Cooldown({
-	spellID = 112948, -- Frost Bomb
-	spec = 3,
-	size = 50,
-	position = {'CENTER', 'UIParent', 'CENTER', 0, -250},
-	hideOutOfCombat = true,
-	desaturate = true,
-	movable = false,
+-- Frost Bomb
+addon:Cooldown(112948, {
+    spec = 3,
+    size = 50,
+    position = {'CENTER', 'UIParent', 'CENTER', 0, -250}
 })
