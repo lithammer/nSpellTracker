@@ -10,6 +10,7 @@ local CreateIcon, TrackSpell, UpdateConfig
 
 function addon:Buff(spellId, config)
     local aura = TrackSpell(spellId, 'HELPFUL')
+    aura.verifySpell = false
     UpdateConfig(aura, config)
     CreateIcon(aura)
     table.insert(self.auras, aura)
@@ -55,7 +56,11 @@ function spell:SetVisibility()
         alpha = 0
     end
 
-    if not (self:IsCurrentSpec() and FindSpellBookSlotBySpellID(self._spellId)) then
+    if self.verifySpell and not FindSpellBookSlotBySpellID(self._spellId) then
+        alpha = 0
+    end
+
+    if not self:IsCurrentSpec() then
         alpha = 0
     end
 
@@ -115,6 +120,7 @@ TrackSpell = function(spellId, filter)
     t.size = 36
     t.spec = nil
     t.unit = 'player'
+    t.verifySpell = true
     t.visibilityState = '[petbattle] [vehicleui] hide; show'
 
     t.alpha = {
@@ -127,9 +133,7 @@ end
 
 UpdateConfig = function(old, new)
     for k, v in pairs(new) do
-        if old[k] or k == 'PostUpdateHook' then
-            old[k] = v
-        end
+        old[k] = v
     end
 end
 

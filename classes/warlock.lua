@@ -46,6 +46,7 @@ addon:Debuff(348, {
 -- Burning Rush
 addon:Buff(111400, {
     position = {'CENTER', 'UIParent', 'CENTER', 100, -42},
+    verifySpell = true,
     hideOutOfCombat = false
 })
 
