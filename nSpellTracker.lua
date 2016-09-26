@@ -37,52 +37,6 @@ end
 local spell = {}
 spell.__index = spell
 
-function spell:IsUsable()
-    return self.Icon.Cooldown:GetCooldownDuration() == 0
-end
-
-function spell:SetVisibility()
-    local alpha = self._show and self.alpha.active or self.alpha.inactive
-
-    if self.desaturate then
-        if self._filter == nil then
-            self.Icon.Texture:SetDesaturated(not self:IsUsable())
-        else
-            self.Icon.Texture:SetDesaturated(not self._show)
-        end
-    end
-
-    if self.hideOutOfCombat and not InCombatLockdown() then
-        alpha = 0
-    end
-
-    if self.verifySpell and not FindSpellBookSlotBySpellID(self._spellId) then
-        alpha = 0
-    end
-
-    if not self:IsCurrentSpec() then
-        alpha = 0
-    end
-
-    if alpha <= self.alpha.inactive then
-        self.Icon.Cooldown:SetCooldown(0, 0)
-        self.Icon.Count:SetText()
-    end
-
-    self.Icon.Cooldown:SetSwipeColor(0, 0, 0, alpha * 0.8)
-    self.Icon.Cooldown:SetDrawEdge(alpha > 0)
-    self.Icon.Cooldown:SetDrawBling(alpha > 0)
-    self.Icon:SetAlpha(alpha)
-
-    if self.glowOverlay and alpha > 0 and IsSpellOverlayed(self._spellId) then
-        ActionButton_ShowOverlayGlow(self.Icon)
-    else
-        ActionButton_HideOverlayGlow(self.Icon)
-    end
-
-    self._show = false
-end
-
 function spell:IsCurrentSpec()
     if type(self.spec) == 'table' then
         for _, spec in pairs(self.spec) do
@@ -144,7 +98,7 @@ end
 CreateIcon = function(self)
     -- Just use the first available texture, will be updated in
     -- Scan{Auras,Cooldowns} later on
-    local _, _, image = GetSpellInfo(self._spellId)
+    local _, _, iconTexture = GetSpellInfo(self._spellId)
 
     self.Icon = CreateFrame('Frame', GetFrameName(self._spellId), UIParent, 'SecureHandlerStateTemplate')
     self.Icon:SetPoint(unpack(self.position))
@@ -160,7 +114,7 @@ CreateIcon = function(self)
     -- Create texture
     local texture = self.Icon:CreateTexture(nil, 'BACKGROUND', nil, -6)
     texture:SetAllPoints(self.Icon)
-    texture:SetTexture(image)
+    texture:SetTexture(iconTexture)
     self.Icon.Texture = texture
 
     -- Create border
@@ -188,6 +142,12 @@ CreateIcon = function(self)
     count:SetFontObject(NumberFontNormal)
     count:SetPoint('BOTTOMLEFT', self.Icon, 'BOTTOMLEFT', 0, 0)
     self.Icon.Count = count
+
+    -- Duration (auras only)
+    local duration = self.Icon:CreateFontString(nil, 'OVERLAY')
+    duration:SetFontObject(NumberFontNormal)
+    duration:SetPoint('CENTER', self.Icon, 'CENTER', 0, 0)
+    self.Icon.Duration = duration
 
     -- Set visibility
     if self.visibilityState then

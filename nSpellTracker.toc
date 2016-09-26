@@ -3,7 +3,6 @@
 ## Notes: Simple buff, debuff and cooldown tracking for units and spells
 ## OptionalDeps: !Beautycase
 
-utils.lua
 nSpellTracker.lua
 
 classes\deathknight.lua
@@ -19,4 +18,5 @@ classes\warlock.lua
 classes\warrior.lua
 classes\everyone.lua
 
-events.lua
+auras.lua
+cooldowns.lua
