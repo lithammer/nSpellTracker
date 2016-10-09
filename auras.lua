@@ -21,10 +21,14 @@ local function CalculateDuration(expires)
     return Round(duration, idp)
 end
 
-local function GetAlpha(self, duration)
+local function GetAlpha(self, duration, caster)
     local alpha = self.alpha.active
 
     if duration == 0 then
+        alpha = self.alpha.inactive
+    end
+
+    if self.caster ~= caster then
         alpha = self.alpha.inactive
     end
 
@@ -32,15 +36,15 @@ local function GetAlpha(self, duration)
         alpha = 0
     end
 
-    if self.verifySpell and not FindSpellBookSlotBySpellID(self._spellId) then
+    if self.verifySpell and not FindSpellBookSlotBySpellID(self.spellID) then
         alpha = 0
     end
     return alpha
 end
 
 local function UpdateAura(self)
-    local name, _, icon = GetSpellInfo(self._spellId)
-    local _, _, _, count, debuffType, _, expires, caster = UnitAura(self.unit, name, nil, self._filter)
+    local name, _, icon = GetSpellInfo(self.spellID)
+    local _, _, _, count, debuffType, _, expires, caster = UnitAura(self.unit, name, nil, self.filter)
 
     local duration = CalculateDuration(expires)
 
@@ -60,7 +64,7 @@ local function UpdateAura(self)
         self.Icon.Texture:SetDesaturated(not durationText)
     end
 
-    if count and count > 0 then
+    if self.caster == caster and count and count > 0 then
         self.Icon.Count:SetText(count)
     else
         self.Icon.Count:SetText()
@@ -76,7 +80,7 @@ local function UpdateAura(self)
         self.Icon.Border:SetVertexColor(color.r, color.g, color.b)
     end
 
-    local alpha = GetAlpha(self, duration)
+    local alpha = GetAlpha(self, duration, caster)
     self.Icon:SetAlpha(alpha)
 
     if duration and self.PostUpdateHook then

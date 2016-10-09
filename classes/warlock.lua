@@ -65,7 +65,8 @@ addon:Cooldown(17962, {
 -- Backdraft
 addon:Buff(117828, {
     spec = destruction,
-    position = {'CENTER', 'UIParent', 'CENTER', -252, 0}
+    position = {'CENTER', 'UIParent', 'CENTER', -252, 0},
+    verifySpell = true
 })
 
     -- Demonology

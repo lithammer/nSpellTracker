@@ -8,25 +8,25 @@ local CreateIcon, TrackSpell, UpdateConfig
 
 -- Public methods
 
-function addon:Buff(spellId, config)
-    local aura = TrackSpell(spellId, 'HELPFUL')
+function addon:Buff(spellID, config)
+    local aura = TrackSpell(spellID, 'HELPFUL')
     aura.verifySpell = false
     UpdateConfig(aura, config)
     CreateIcon(aura)
     table.insert(self.auras, aura)
 end
 
-function addon:Debuff(spellId, config)
-    local aura = TrackSpell(spellId, 'HARMFUL')
+function addon:Debuff(spellID, config)
+    local aura = TrackSpell(spellID, 'HARMFUL')
     aura.unit = 'target'
     UpdateConfig(aura, config)
     CreateIcon(aura)
     table.insert(self.auras, aura)
 end
 
-function addon:Cooldown(spellId, config)
-    local cd = TrackSpell(spellId, nil)
-    cd.desaturate = true
+function addon:Cooldown(spellID, config)
+    local cd = TrackSpell(spellID, nil)
+    -- cd.desaturate = true
     UpdateConfig(cd, config)
     CreateIcon(cd)
     table.insert(self.cooldowns, cd)
@@ -55,19 +55,17 @@ function spell:IsCurrentSpec()
     return self.spec == nil or self.spec == GetSpecialization()
 end
 
-TrackSpell = function(spellId, filter)
+TrackSpell = function(spellID, filter)
     local t = {}
     setmetatable(t, spell)
 
     -- Internal values
-    t._spellId = spellId
-    t._filter = filter
-    t._expirationTime = GetTime()  -- For {de}buffs
-    t._startTime = GetTime()       -- For cooldowns
+    t.spellID = spellID
+    t.filter = filter
 
     -- Set default values
     t.caster = 'player'
-    t.desaturate = true
+    t.desaturate = false
     t.glowOverlay = true
     t.hideOutOfCombat = true
     t.position = {'CENTER'}
@@ -91,28 +89,35 @@ UpdateConfig = function(old, new)
     end
 end
 
-local function GetFrameName(spellId)
-    return string.format('%s%s%s', 'nSpellTracker', #addon.auras, spellId)
+local function GetFrameName(spellID)
+    return string.format('%s%s%s', 'nSpellTracker', #addon.auras, spellID)
 end
 
 CreateIcon = function(self)
-    -- Just use the first available texture, will be updated in
-    -- Scan{Auras,Cooldowns} later on
-    local _, _, iconTexture = GetSpellInfo(self._spellId)
+    local _, _, iconTexture = GetSpellInfo(self.spellID)
 
-    self.Icon = CreateFrame('Frame', GetFrameName(self._spellId), UIParent, 'SecureHandlerStateTemplate')
+    self.Icon = CreateFrame('Frame', GetFrameName(self.spellID), UIParent, 'SecureHandlerStateTemplate')
     self.Icon:SetPoint(unpack(self.position))
     self.Icon:SetSize(self.size, self.size)
     self.Icon:SetAlpha(0)
 
     -- Create cooldown
-    local cooldown = CreateFrame('Cooldown', nil, self.Icon, 'CooldownFrameTemplate')
+    local cooldown = CreateFrame('Cooldown', '$parentCooldown', self.Icon, 'CooldownFrameTemplate')
     cooldown:SetAllPoints(self.Icon)
-    cooldown:SetReverse(true)
-    self.Icon.Cooldown = cooldown
+    cooldown:SetEdgeTexture('Interface\\Cooldown\\edge')
+    cooldown:SetSwipeColor(0, 0, 0)
+    cooldown:SetHideCountdownNumbers(false)
+    self.Icon.Cooldown = cooldown  -- Needs lowercase 'c' because of ActionButton_UpdateCooldown
+
+    local chargeCooldown = CreateFrame('Cooldown', '$parentChargeCooldown', self.Icon, 'CooldownFrameTemplate')
+    chargeCooldown:SetAllPoints(self.Icon)
+    chargeCooldown:SetHideCountdownNumbers(true)
+    chargeCooldown:SetDrawSwipe(false)
+    chargeCooldown:SetFrameStrata('TOOLTIP')
+    self.Icon.chargeCooldown = chargeCooldown
 
     -- Create texture
-    local texture = self.Icon:CreateTexture(nil, 'BACKGROUND', nil, -6)
+    local texture = self.Icon:CreateTexture('$parentTexture', 'BACKGROUND', nil, -6)
     texture:SetAllPoints(self.Icon)
     texture:SetTexture(iconTexture)
     self.Icon.Texture = texture
@@ -123,7 +128,7 @@ CreateIcon = function(self)
     -- end
 
     -- Create border glow
-    local glow = self.Icon:CreateTexture(nil, 'BACKGROUND', nil, -8)
+    local glow = self.Icon:CreateTexture('$parentGlow', 'BACKGROUND', nil, -8)
     glow:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_glow')
     glow:SetVertexColor(0, 0, 0, 1)
     glow:SetPoint('TOPLEFT', self.Icon, 'TOPLEFT', -self.size*3.3/32, self.size*3.3/32)
@@ -131,20 +136,20 @@ CreateIcon = function(self)
     self.Icon.Glow = glow
 
     -- Create border
-    local border = self.Icon:CreateTexture(nil, 'BACKGROUND', nil, -4)
+    local border = self.Icon:CreateTexture('$parentBorder', 'BACKGROUND', nil, -4)
     border:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_roth')
     border:SetVertexColor(0.37, 0.3, 0.3, 1)
     border:SetAllPoints(self.Icon)
     self.Icon.Border = border
 
     -- Stacks/count
-    local count = self.Icon:CreateFontString(nil, 'OVERLAY')
+    local count = self.Icon:CreateFontString('$parentCount', 'OVERLAY')
     count:SetFontObject(NumberFontNormal)
-    count:SetPoint('BOTTOMLEFT', self.Icon, 'BOTTOMLEFT', 0, 0)
+    count:SetPoint('BOTTOMRIGHT', self.Icon, 'BOTTOMRIGHT', 0, 0)
     self.Icon.Count = count
 
     -- Duration (auras only)
-    local duration = self.Icon:CreateFontString(nil, 'OVERLAY')
+    local duration = self.Icon:CreateFontString('$parentDuration', 'OVERLAY')
     duration:SetFontObject(NumberFontNormal)
     duration:SetPoint('CENTER', self.Icon, 'CENTER', 0, 0)
     self.Icon.Duration = duration
