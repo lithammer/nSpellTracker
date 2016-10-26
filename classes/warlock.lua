@@ -69,6 +69,13 @@ addon:Buff(117828, {
     verifySpell = true
 })
 
+-- Mana Tap
+addon:Buff(196104, {
+    spec = destruction,
+    position = {'CENTER', 'UIParent', 'CENTER', 100, 42},
+    verifySpell = true
+})
+
     -- Demonology
 
 -- Demonic Empowerment
@@ -122,5 +129,11 @@ addon:Buff(216708, {
 -- Thal'Kiel's Consumption
 addon:Cooldown(211714, {
     spec = demonology,
+    position = {'CENTER', 'UIParent', 'CENTER', -252, 0}
+})
+
+-- Dimensional Rift
+addon:Cooldown(211714, {
+    spec = destruction,
     position = {'CENTER', 'UIParent', 'CENTER', -252, 0}
 })
