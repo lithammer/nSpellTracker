@@ -69,8 +69,8 @@ addon:Buff(117828, {
     verifySpell = true
 })
 
--- Mana Tap
-addon:Buff(196104, {
+-- Empowered Life Tap
+addon:Buff(235157, {
     spec = destruction,
     position = {'CENTER', 'UIParent', 'CENTER', 100, 42},
     verifySpell = true
