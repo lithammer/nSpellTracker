@@ -1,4 +1,5 @@
 local _, addon = ...
+local cfg = addon.cfg
 
 local globalCooldown = 1.5
 

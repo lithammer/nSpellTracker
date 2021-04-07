@@ -1,8 +1,10 @@
 local _, addon = ...
+local cfg = addon.cfg
 
+local LibGlow = LibStub("LibCustomGlow-1.0")
 local decimalThreshold = 3
 
-function Round(num, idp)
+local function Round(num, idp)
     local mult = 10^(idp or 0)
     return math.floor(num * mult + 0.5) / mult
 end
@@ -21,7 +23,7 @@ local function CalculateDuration(expires)
     return Round(duration, idp)
 end
 
-local function GetAlpha(self, duration, caster)
+local function GetAlpha(self, duration, caster, auraName)
     local alpha = self.alpha.active
 
     if duration == 0 then
@@ -39,13 +41,84 @@ local function GetAlpha(self, duration, caster)
     if self.verifySpell and not FindSpellBookSlotBySpellID(self.spellID) then
         alpha = 0
     end
+	
+	if self.alpha then
+		if self.alpha.notFound and not auraName then
+			--aura not found
+			alpha = self.alpha.notFound.icon or alpha
+		elseif self.alpha.found and auraName then
+			--aura found
+			alpha = self.alpha.found.icon or alpha
+		end
+	end
+	
     return alpha
 end
 
-local function UpdateAura(self)
-    local name, _, icon = GetSpellInfo(self.spellID)
-    local _, _, _, count, debuffType, _, expires, caster = UnitAura(self.unit, name, nil, self.filter)
+local function SetGlow(self, alpha)
+	if not self.glowOverlay then return end
+	
+	local reqAlpha = self.glowOverlay.reqAlpha or 0
+	local shineType = self.glowOverlay.shineType or 'Blizzard'
+	
+	local switch = false
+	if reqAlpha > 0 and alpha >= reqAlpha then switch = true end
+	if reqAlpha == 0 and alpha > reqAlpha then switch = true end --only display by default if we have alpha greather than zero
+	
+	if shineType == 'Blizzard' then
+		if switch then
+			ActionButton_ShowOverlayGlow(self.Icon)
+		else
+			ActionButton_HideOverlayGlow(self.Icon)
+		end
+	elseif shineType == 'PixelGlow' then
+		local opt = self.glowOverlay
+		if switch then
+			LibGlow.PixelGlow_Start(self.Icon, opt.color, opt.numLines, opt.frequency, opt.lineLength, opt.lineThickness, opt.xOffset, opt.yOffset, opt.border)
+		else
+			LibGlow.PixelGlow_Stop(self.Icon, nil)
+		end
+	elseif shineType == 'AutoCastGlow' then
+		local opt = self.glowOverlay
+		if switch then
+			LibGlow.AutoCastGlow_Start(self.Icon, opt.color, opt.numParticle, opt.frequency, opt.particleScale, opt.xOffset, opt.yOffset)
+		else
+			LibGlow.AutoCastGlow_Stop(self.Icon, nil)
+		end
+	elseif shineType == 'ButtonGlow' then
+		local opt = self.glowOverlay
+		if switch then
+			LibGlow.ButtonGlow_Start(self.Icon, opt.color, opt.frequency)
+		else
+			LibGlow.ButtonGlow_Stop(self.Icon, nil)
+		end
+	end
+end
 
+local function UpdateAura(self)
+	if not self.spellID then return end
+	if self.validateUnit and not UnitExists(self.unit) then return end
+	
+    local name, _, icon = GetSpellInfo(self.spellID)
+	local auraName, count, debuffType, expires, caster, spellId
+	
+	if self.matchSpellID then
+		local foundSpell = false
+		
+		for i=1, 40 do
+			auraName, _, count, debuffType, _, expires, caster, _, _, spellId = UnitAura(self.unit, i, self.filter)
+			if spellId == self.spellID then
+				foundSpell = true
+				break
+			end
+		end
+		if not foundSpell then return end
+	else
+		auraName, _, count, debuffType, _, expires, caster, _, _, spellId = AuraUtil.FindAuraByName(name, self.unit, self.filter)
+	end
+
+	if self.isMine and caster and caster ~= "player" then return end
+	
     local duration = CalculateDuration(expires)
 
     if duration > 0 and duration < decimalThreshold then
@@ -63,7 +136,7 @@ local function UpdateAura(self)
     if self.desaturate then
         self.Icon.Texture:SetDesaturated(not durationText)
     end
-
+	
     if self.caster == caster and count and count > 0 then
         self.Icon.Count:SetText(count)
     else
@@ -79,10 +152,16 @@ local function UpdateAura(self)
         local color = DebuffTypeColor[debuffType]
         self.Icon.Border:SetVertexColor(color.r, color.g, color.b)
     end
-
-    local alpha = GetAlpha(self, duration, caster)
+	
+	if caster and caster == "player" and cfg.highlightPlayerSpells then
+		self.Icon.Border:SetVertexColor(0.2,0.6,0.8,1)
+	end
+		
+    local alpha = GetAlpha(self, duration, caster, auraName)
     self.Icon:SetAlpha(alpha)
-
+	
+	SetGlow(self, alpha)
+	
     if duration and self.PostUpdateHook then
         self:PostUpdateHook()
     end
@@ -108,11 +187,10 @@ end
 --     ScanAuras()
 -- end)
 
-local refreshInterval = 0.1
 CreateFrame('Frame'):SetScript('OnUpdate', function(self, elapsed)
     self.delta = (self.delta or 0) + elapsed
-    if self.delta >= refreshInterval then
-        self.delta = self.delta - refreshInterval
+    if self.delta >= cfg.refreshInterval then
+        self.delta = self.delta - cfg.refreshInterval
         ScanAuras()
     end
 end)

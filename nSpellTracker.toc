@@ -3,8 +3,12 @@
 ## Notes: Simple buff, debuff and cooldown tracking for units and spells
 ## OptionalDeps: !Beautycase
 
+libs\LibStub\LibStub.lua
+libs\LibCustomGlow-1.0\LibCustomGlow-1.0.lua
+
 nSpellTracker.lua
 
+classes\demonhunter.lua
 classes\deathknight.lua
 classes\druid.lua
 classes\hunter.lua

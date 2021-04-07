@@ -4,6 +4,12 @@ addon.auras = {}
 addon.cooldowns = {}
 addon.playerClass = select(2, UnitClass('player'))
 
+addon.cfg = {
+	highlightPlayerSpells = false,
+	refreshInterval = 0.1,
+}
+
+local cfg = addon.cfg
 local CreateIcon, TrackSpell, UpdateConfig
 
 -- Public methods
@@ -66,7 +72,6 @@ TrackSpell = function(spellID, filter)
     -- Set default values
     t.caster = 'player'
     t.desaturate = false
-    t.glowOverlay = true
     t.hideOutOfCombat = true
     t.position = {'CENTER'}
     t.size = 36

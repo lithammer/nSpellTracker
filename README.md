@@ -1,12 +1,10 @@
 # nSpellTracker
 
 ```lua
--- Player spells will have a blue border
-highlightPlayerSpells = true
-
--- How fast should the timer update itself
-updatetime = 0.1
-```
+addon.cfg = {
+	highlightPlayerSpells = true, -- Player spells will have a blue border
+	refreshInterval = 0.1, -- How fast to scan the auras (buff/debuffs)
+}
 
 ## Example
 
@@ -74,8 +72,8 @@ addon.debuffs.mortalWounds
 ```lua
 {
 	-- The talent tree you want to track the spell (nil will make it work in
-	-- any tree).
-	spec = nil,
+	-- any tree).  
+	spec = nil, -- you can use a table as well, like {1,3} for specs 1 and 3
 
 	-- Attribute that lets you show/hide the frame on a given state condition.
 	-- example: '[stance:2] show; hide'
@@ -101,6 +99,9 @@ addon.debuffs.mortalWounds
 
 	-- Hide if the buff/debuff isn't mine.
 	isMine = false,
+	
+	--verify if the spellID is in our spellbook
+	verifySpell = true,
 
 	-- Desaturate the icon if not found.
 	desaturate = true,
@@ -108,36 +109,64 @@ addon.debuffs.mortalWounds
 	-- Match only spell IDs (instead of spell names extracted for a spell ID)
 	matchSpellID = false,
 
-	-- In case you want to move the frame in-game, the size will be the MINIMUM
-	-- frame size you can resize to, so adjust the size in case you need lower
-	-- minimum size ingame.
-	movable = true,
-
 	-- Set the alpha values of your icons (transparency).
 
 	-- Debuffs and Buffs
 	alpha = {
 		found = {
-			frame = 1,
 			icon = 1,
 		},
 		notFound = {
-			frame = 0.4,
 			icon = 0.6,
 		},
 	},
 
-
 	-- Cooldowns
 	alpha = {
 		cooldown = {
-			frame = 1,
 			icon = 0.6,
 		},
 		notCooldown = {
-			frame = 1,
 			icon = 1,
 		},
 	}
+	
+	-- Set the types of GLOW you want
+	
+	glowOverlay = {
+		shineType = 'Blizzard',
+		reqAlpha = 0, --required alpha level to show, default is zero
+		color = {r,g,b,a}, --  Default value is {0.95, 0.95, 0.32, 1}
+		frequency = 0.125, --  Default value is 0.125
+	},
+	glowOverlay = {
+		shineType = 'PixelGlow',
+		reqAlpha = 0.5, --required alpha level to show, default is zero
+		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		numLines = 8, --default is 8
+		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
+		lineLength = nil, --length of lines, common is 10-15. Default = nil, will set line length depending on dimensions of glow frame
+		lineThickness = 2, --line thickness, default value is 1
+		xOffset = 0, --- offset of glow relative to region border;
+		yOffset = 0, --- offset of glow relative to region border;
+		border = false,  -- set to true to create border under lines;
+	},
+	glowOverlay = {
+		shineType = 'AutoCastGlow',
+		reqAlpha = 0.5, --required alpha level to show, default is zero
+		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		numParticle = 8, --default is 8, number of particles to show
+		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
+		particleScale = 1, --scale of the particles, default is 1
+		xOffset = 0, --- offset of glow relative to region border;
+		yOffset = 0, --- offset of glow relative to region border;
+	},
+	glowOverlay = {
+		shineType = 'ButtonGlow',
+		reqAlpha = 0.5, --required alpha level to show, default is zero
+		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
+	},
+	
 }
 ```
