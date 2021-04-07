@@ -5,6 +5,7 @@ addon.cfg = {
 	highlightPlayerSpells = true, -- Player spells will have a blue border
 	refreshInterval = 0.1, -- How fast to scan the auras (buff/debuffs)
 }
+```
 
 ## Example
 
