@@ -4,7 +4,7 @@ addon.auras = {}
 addon.cooldowns = {}
 addon.playerClass = select(2, UnitClass('player'))
 
-addon.cfg = {
+addon.cfg = addon.cfg or {
 	highlightPlayerSpells = false,
 	refreshInterval = 0.1,
 }
@@ -17,6 +17,7 @@ local CreateIcon, TrackSpell, UpdateConfig
 function addon:Buff(spellID, config)
     local aura = TrackSpell(spellID, 'HELPFUL')
     aura.verifySpell = false
+	aura.rootSpellID = spellID
     UpdateConfig(aura, config)
     CreateIcon(aura)
     table.insert(self.auras, aura)
@@ -25,6 +26,7 @@ end
 function addon:Debuff(spellID, config)
     local aura = TrackSpell(spellID, 'HARMFUL')
     aura.unit = 'target'
+	aura.rootSpellID = spellID
     UpdateConfig(aura, config)
     CreateIcon(aura)
     table.insert(self.auras, aura)
@@ -33,6 +35,7 @@ end
 function addon:Cooldown(spellID, config)
     local cd = TrackSpell(spellID, nil)
     -- cd.desaturate = true
+	cd.rootSpellID = spellID
     UpdateConfig(cd, config)
     CreateIcon(cd)
     table.insert(self.cooldowns, cd)
@@ -99,9 +102,9 @@ local function GetFrameName(spellID)
 end
 
 CreateIcon = function(self)
-    local _, _, iconTexture = GetSpellInfo(self.spellID)
+    local _, _, iconTexture = GetSpellInfo(self.rootSpellID)
 
-    self.Icon = CreateFrame('Frame', GetFrameName(self.spellID), UIParent, 'SecureHandlerStateTemplate')
+    self.Icon = CreateFrame('Frame', GetFrameName(self.rootSpellID), UIParent, 'SecureHandlerStateTemplate')
     self.Icon:SetPoint(unpack(self.position))
     self.Icon:SetSize(self.size, self.size)
     self.Icon:SetAlpha(0)

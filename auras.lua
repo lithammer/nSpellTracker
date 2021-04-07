@@ -23,7 +23,7 @@ local function CalculateDuration(expires)
     return Round(duration, idp)
 end
 
-local function GetAlpha(self, duration, caster, auraName)
+local function GetAlpha(self, duration, caster, auraName, spellID)
     local alpha = self.alpha.active
 
     if duration == 0 then
@@ -38,7 +38,7 @@ local function GetAlpha(self, duration, caster, auraName)
         alpha = 0
     end
 
-    if self.verifySpell and not FindSpellBookSlotBySpellID(self.spellID) then
+    if self.verifySpell and spellID and not FindSpellBookSlotBySpellID(spellID) then
         alpha = 0
     end
 	
@@ -57,6 +57,7 @@ end
 
 local function SetGlow(self, alpha)
 	if not self.glowOverlay then return end
+	if not alpha then return end
 	
 	local reqAlpha = self.glowOverlay.reqAlpha or 0
 	local shineType = self.glowOverlay.shineType or 'Blizzard'
@@ -99,36 +100,40 @@ local function UpdateAura(self)
 	if not self.spellID then return end
 	if self.validateUnit and not UnitExists(self.unit) then return end
 	
-    local name, _, icon = GetSpellInfo(self.spellID)
-	local auraName, count, debuffType, expires, caster, spellId
+	local name, icon, count, debuffType, expires, caster, spID
+	local spellList = {}
+
+	--check for spell table
+    if type(self.spellID) == 'table' then
+        for _, value in pairs(self.spellID) do
+			spellList[value] = true
+        end
+		spellList[self.rootSpellID] = true
+    end
 	
-	if self.matchSpellID then
-		local foundSpell = false
-		
-		for i=1, 40 do
-			auraName, _, count, debuffType, _, expires, caster, _, _, spellId = UnitAura(self.unit, i, self.filter)
-			if spellId == self.spellID then
-				foundSpell = true
-				break
+	for i=1, 40 do
+		local nameChk, _, _, _, _, _, _, _, _, spellIDChk = UnitAura(self.unit, i, self.filter)
+		if not nameChk then break end
+		if self.spellID == spellIDChk or spellList[spellIDChk] then
+			name, icon, count, debuffType, _, expires, caster, _, _, spID = UnitAura(self.unit, i, self.filter)
+			if spID ~= self.rootSpellID then
+				name, _, icon = GetSpellInfo(self.rootSpellID)
 			end
+			break
 		end
-		if not foundSpell then return end
-	else
-		auraName, _, count, debuffType, _, expires, caster, _, _, spellId = AuraUtil.FindAuraByName(name, self.unit, self.filter)
 	end
 
 	if self.isMine and caster and caster ~= "player" then return end
-	
-    local duration = CalculateDuration(expires)
 
-    if duration > 0 and duration < decimalThreshold then
+    local duration = CalculateDuration(expires)
+    if duration and duration > 0 and duration < decimalThreshold then
         self.Icon.Duration:SetTextColor(1, 0, 0, 1)
     else
         self.Icon.Duration:SetTextColor(1, 1, 1, 1)
     end
 
     local durationText = ''
-    if duration > 0 and self.caster == caster then
+    if duration and duration > 0 and self.caster == caster then
         durationText = (duration == math.huge) and 'Inf' or duration
     end
     self.Icon.Duration:SetText(durationText)
@@ -137,7 +142,7 @@ local function UpdateAura(self)
         self.Icon.Texture:SetDesaturated(not durationText)
     end
 	
-    if self.caster == caster and count and count > 0 then
+    if caster and count and self.caster == caster and count > 0 then
         self.Icon.Count:SetText(count)
     else
         self.Icon.Count:SetText()
@@ -157,7 +162,7 @@ local function UpdateAura(self)
 		self.Icon.Border:SetVertexColor(0.2,0.6,0.8,1)
 	end
 		
-    local alpha = GetAlpha(self, duration, caster, auraName)
+    local alpha = GetAlpha(self, duration, caster, name, spID)
     self.Icon:SetAlpha(alpha)
 	
 	SetGlow(self, alpha)

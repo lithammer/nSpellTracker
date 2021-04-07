@@ -14,8 +14,11 @@ file under the `classes` folder and add one of the following: `addon:Debuff(...)
 `addon:Buff(...)` `addon:Cooldown(...)`, where `...` is a table containing
 various settings. Here's an example for tracking Corruption:
 
+The rootSpellID is the primary spellID that will be used for not only the Icon's texture but to compare it with other spellID's.
+The rootSpellID is REQUIRED.
+
 ```lua
-addon:Debuff({
+addon:Debuff(rootSpellID, {
 	spellID = 172,
 	size = 36,
 	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
@@ -24,14 +27,13 @@ addon:Debuff({
 	hideOutOfCombat = true,
 	isMine = true,
 	desaturate = true,
-	movable = false,
 })
 ```
 
 To track multiple spells you just add a table of spell ids like so:
 
 ```lua
-addon:Buff({
+addon:Buff(rootSpellID, {
 	spellID = {172, 234, 2356},
 })
 ```
@@ -39,34 +41,13 @@ addon:Buff({
 The same goes with the `spec` option:
 
 ```lua
-addon:Buff({
+addon:Buff(rootSpellID, {
 	spec = {1, 3},
 })
 ```
 
-There's also a helper buff/debuff table so that you can easily target
-buff/debuff groups like Mortal Wounds or Spell Power buffs. Just assign
-`spellID` any of the following values:
+NOTE: Please note that the buff/debuff duration will be grabbed from the first spellID that matches, if a spellID table is used.  So it may not match exactly with the duration for the rootSpellID.
 
-```lua
--- Buffs
-addon.buffs.stats
-addon.buffs.stamina
-addon.buffs.attackPower
-addon.buffs.spellPower
-addon.buffs.haste
-addon.buffs.spellHaste
-addon.buffs.criticalStrike
-addon.buffs.master
-
--- Debuffs
-addon.debuffs.weakenedArmor
-addon.debuffs.physicalVulnerability
-addon.debuffs.magicVulnerability
-addon.debuffs.weakenedBlows
-addon.debuffs.slowCasting
-addon.debuffs.mortalWounds
-```
 
 ## Settings
 
@@ -80,9 +61,10 @@ addon.debuffs.mortalWounds
 	-- example: '[stance:2] show; hide'
 	visibilityState = '[petbattle] hide; show',
 
-	-- The spellid to track this will represent the icon if none is found.
-	spellID = 469,
-
+	-- The spellid to track this will represent the icon to be used.  If no spellID is given then the rootSpellID is used.
+	spellID = 469, -- a table can be used as well {12345, 435, 2586674} the first spellID that matches will be used. 
+	spellID = {12345, 435, 2586674}, -- a table can be used as well, the first spellID that matches will be used. This table will always include the rootSpellID.
+	
 	-- The size of the icon.
 	size = 26,
 
@@ -107,28 +89,25 @@ addon.debuffs.mortalWounds
 	-- Desaturate the icon if not found.
 	desaturate = true,
 
-	-- Match only spell IDs (instead of spell names extracted for a spell ID)
-	matchSpellID = false,
-
 	-- Set the alpha values of your icons (transparency).
-
+	
 	-- Debuffs and Buffs
 	alpha = {
 		found = {
-			icon = 1,
+			icon = 1, --buff/debuff was found
 		},
 		notFound = {
-			icon = 0.6,
+			icon = 0.6, --buff/debuff was not found
 		},
 	},
 
 	-- Cooldowns
 	alpha = {
 		cooldown = {
-			icon = 0.6,
+			icon = 0.6, --spell on cooldown
 		},
 		notCooldown = {
-			icon = 1,
+			icon = 1, --spell not on cooldown
 		},
 	}
 	
