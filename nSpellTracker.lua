@@ -9,14 +9,45 @@ addon.cfg = addon.cfg or {
 	refreshInterval = 0.1,
 }
 
+local debugf = tekDebug and tekDebug:GetFrame("nSpellTracker")
+function addon.Debug(...)
+    if debugf then debugf:AddMessage(string.join(", ", tostringall(...))) end
+end
+
 local cfg = addon.cfg
 local CreateIcon, TrackSpell, UpdateConfig
 
 -- Public methods
 
+function addon:GetTimeText(timeLeft)
+	if not tonumber(timeLeft) then return timeLeft end
+	
+	local hours, minutes, seconds = 0, 0, 0
+	if( timeLeft >= 3600 ) then
+		hours = ceil(timeLeft / 3600)
+		timeLeft = mod(timeLeft, 3600)
+	end
+
+	if( timeLeft >= 60 ) then
+		minutes = ceil(timeLeft / 60)
+		timeLeft = mod(timeLeft, 60)
+	end
+
+	seconds = timeLeft > 0 and timeLeft or 0
+
+	if hours > 0 then
+		return string.format("%dh", hours)
+	elseif minutes > 0 then
+		return string.format("%dm", minutes)
+	elseif seconds > 0 then
+		return string.format("%ds", seconds)
+	else
+		return nil
+	end
+end
+
 function addon:Buff(spellID, config)
     local aura = TrackSpell(spellID, 'HELPFUL')
-    aura.verifySpell = false
 	aura.rootSpellID = spellID
     UpdateConfig(aura, config)
     CreateIcon(aura)
@@ -36,7 +67,10 @@ function addon:Cooldown(spellID, config)
     local cd = TrackSpell(spellID, nil)
     -- cd.desaturate = true
 	cd.rootSpellID = spellID
+	cd.cdType = 'spell'
     UpdateConfig(cd, config)
+	--overwrite, we don't want to use multiple spellID's
+	cd.spellID = spellID
     CreateIcon(cd)
     table.insert(self.cooldowns, cd)
 end
@@ -80,7 +114,7 @@ TrackSpell = function(spellID, filter)
     t.size = 36
     t.spec = nil
     t.unit = 'player'
-    t.verifySpell = true
+    t.verifySpell = false
     t.visibilityState = '[petbattle] [vehicleui] hide; show'
 
     t.alpha = {
@@ -130,11 +164,6 @@ CreateIcon = function(self)
     texture:SetTexture(iconTexture)
     self.Icon.Texture = texture
 
-    -- Create border
-    -- if self.Icon.CreateBeautyBorder then
-    --     self.Icon:CreateBeautyBorder(12)
-    -- end
-
     -- Create border glow
     local glow = self.Icon:CreateTexture('$parentGlow', 'BACKGROUND', nil, -8)
     glow:SetTexture('Interface\\AddOns\\nSpellTracker\\media\\simplesquare_glow')
@@ -167,3 +196,13 @@ CreateIcon = function(self)
         RegisterStateDriver(self.Icon, 'visibility', self.visibilityState)
     end
 end
+
+local events = CreateFrame('Frame')
+events:SetScript('OnUpdate', function(self, elapsed)
+    self.delta = (self.delta or 0) + elapsed
+    if self.delta >= cfg.refreshInterval then
+        self.delta = self.delta - cfg.refreshInterval
+        if addon.ScanAuras then addon.ScanAuras() end
+		if addon.ScanCooldowns then addon.ScanCooldowns() end
+    end
+end)

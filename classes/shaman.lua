@@ -16,12 +16,24 @@ addon:Buff(192106, {
 			icon = 1,
 		},
 	},
-	-- glowOverlay = {
-		-- shineType = 'Blizzard',
-		-- reqAlpha = 0, --required alpha level to show, default is zero
-		-- color = {r,g,b,a}, --  Default value is {0.95, 0.95, 0.32, 1}
-		-- frequency = 0.125, --  Default value is 0.125
-	-- },
+	glowOverlay = {
+		shineType = 'AutoCastGlow',
+		reqAlpha = 0.5, --required alpha level to show, default is zero
+		color = {0, 1, 118/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		numParticle = 8, --default is 8, number of particles to show
+		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
+		particleScale = 1, --scale of the particles, default is 1
+		xOffset = 0, --- offset of glow relative to region border;
+		yOffset = 0, --- offset of glow relative to region border;
+	},
+})
+
+-- addon:Cooldown(5394, {
+	-- cdType = 'spell',
+	-- position = {'CENTER', 'UIParent', 'CENTER', 150, 70},
+	-- size = 50,
+	-- visibilityState = '[petbattle] [vehicleui] hide; show',
+	-- hideOutOfCombat = false,
 	-- glowOverlay = {
 		-- shineType = 'PixelGlow',
 		-- reqAlpha = 0.5, --required alpha level to show, default is zero
@@ -34,23 +46,7 @@ addon:Buff(192106, {
 		-- yOffset = 0, --- offset of glow relative to region border;
 		-- border = false,  -- set to true to create border under lines;
 	-- },
-	glowOverlay = {
-		shineType = 'AutoCastGlow',
-		reqAlpha = 0.5, --required alpha level to show, default is zero
-		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
-		numParticle = 8, --default is 8, number of particles to show
-		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
-		particleScale = 1, --scale of the particles, default is 1
-		xOffset = 0, --- offset of glow relative to region border;
-		yOffset = 0, --- offset of glow relative to region border;
-	},
-	-- glowOverlay = {
-		-- shineType = 'ButtonGlow',
-		-- reqAlpha = 0.5, --required alpha level to show, default is zero
-		-- color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
-		-- frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
-	-- },
-})
+-- })
 
 --totem check
 -- addon:Buff(5394, {

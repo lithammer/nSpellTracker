@@ -30,6 +30,19 @@ addon:Debuff(rootSpellID, {
 })
 ```
 
+```lua
+addon:Cooldown(rootSpellID, {
+	spellID = 172,
+	size = 36,
+	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
+	unit = 'target',
+	validateUnit = true,
+	hideOutOfCombat = true,
+	isMine = true,
+	desaturate = true,
+})
+```
+
 To track multiple spells you just add a table of spell ids like so:
 
 ```lua
@@ -49,7 +62,7 @@ addon:Buff(rootSpellID, {
 NOTE: Please note that the buff/debuff duration will be grabbed from the first spellID that matches, if a spellID table is used.  So it may not match exactly with the duration for the rootSpellID.
 
 
-## Settings
+## Buff/Debuff Settings
 
 ```lua
 {
@@ -89,8 +102,9 @@ NOTE: Please note that the buff/debuff duration will be grabbed from the first s
 	-- Desaturate the icon if not found.
 	desaturate = true,
 
+	---------------
 	-- Set the alpha values of your icons (transparency).
-	
+	---------------
 	-- Debuffs and Buffs
 	alpha = {
 		found = {
@@ -101,6 +115,82 @@ NOTE: Please note that the buff/debuff duration will be grabbed from the first s
 		},
 	},
 
+	-- Set the types of GLOW you want
+	
+	glowOverlay = {
+		shineType = 'Blizzard',
+		reqAlpha = 0, --required alpha level to show, default is zero
+		color = {r,g,b,a}, --  Default value is {0.95, 0.95, 0.32, 1}
+		frequency = 0.125, --  Default value is 0.125
+	},
+	glowOverlay = {
+		shineType = 'PixelGlow',
+		reqAlpha = 0.5, --required alpha level to show, default is zero
+		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		numLines = 8, --default is 8
+		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
+		lineLength = nil, --length of lines, common is 10-15. Default = nil, will set line length depending on dimensions of glow frame
+		lineThickness = 2, --line thickness, default value is 1
+		xOffset = 0, --- offset of glow relative to region border;
+		yOffset = 0, --- offset of glow relative to region border;
+		border = false,  -- set to true to create border under lines;
+	},
+	glowOverlay = {
+		shineType = 'AutoCastGlow',
+		reqAlpha = 0.5, --required alpha level to show, default is zero
+		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		numParticle = 8, --default is 8, number of particles to show
+		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
+		particleScale = 1, --scale of the particles, default is 1
+		xOffset = 0, --- offset of glow relative to region border;
+		yOffset = 0, --- offset of glow relative to region border;
+	},
+	glowOverlay = {
+		shineType = 'ButtonGlow',
+		reqAlpha = 0.5, --required alpha level to show, default is zero
+		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
+	},
+	
+}
+```
+
+
+## Cooldown
+
+```lua
+{
+	cdType = 'spell', --cooldown types can be 'spell' or 'item', when using 'item' provide the itemID as the rootSpellID
+	
+	-- The talent tree you want to track the spell (nil will make it work in
+	-- any tree).  
+	spec = nil, -- you can use a table as well, like {1,3} for specs 1 and 3
+
+	-- Attribute that lets you show/hide the frame on a given state condition.
+	-- example: '[stance:2] show; hide'
+	visibilityState = '[petbattle] hide; show',
+
+	-- The size of the icon.
+	size = 26,
+
+	-- The position of the icon (http://www.wowwiki.com/API_Region_SetPoint).
+	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
+
+	-- Hide icon out of combat.
+	hideOutOfCombat = true,
+
+	-- Desaturate the icon if not found.
+	desaturate = true,
+
+	--verify if the spellID is in our spellbook
+	verifySpell = false,
+	
+	--add a global cooldown to check in duration.  By default this is turned off.  However you can override if you want.
+	globalCooldown = 1.5, --default is off, however most spells and classes use a 1.5 global cooldown.
+	
+	---------------
+	-- Set the alpha values of your icons (transparency).
+	---------------
 	-- Cooldowns
 	alpha = {
 		cooldown = {

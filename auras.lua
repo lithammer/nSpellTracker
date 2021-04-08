@@ -136,7 +136,7 @@ local function UpdateAura(self)
     if duration and duration > 0 and self.caster == caster then
         durationText = (duration == math.huge) and 'Inf' or duration
     end
-    self.Icon.Duration:SetText(durationText)
+    self.Icon.Duration:SetText(addon:GetTimeText(durationText))
 
     if self.desaturate then
         self.Icon.Texture:SetDesaturated(not durationText)
@@ -182,20 +182,4 @@ local function ScanAuras()
     end
 end
 
--- local events = CreateFrame('Frame')
--- events:RegisterEvent('PLAYER_REGEN_DISABLED')
--- events:RegisterEvent('PLAYER_REGEN_ENABLED')
--- events:RegisterEvent('PLAYER_TARGET_CHANGED')
--- events:RegisterEvent('SPELL_UPDATE_USABLE')
--- events:RegisterEvent('UNIT_AURA')
--- events:SetScript('OnEvent', function(self, event, ...)
---     ScanAuras()
--- end)
-
-CreateFrame('Frame'):SetScript('OnUpdate', function(self, elapsed)
-    self.delta = (self.delta or 0) + elapsed
-    if self.delta >= cfg.refreshInterval then
-        self.delta = self.delta - cfg.refreshInterval
-        ScanAuras()
-    end
-end)
+addon.ScanAuras = ScanAuras
