@@ -26,3 +26,4 @@ classes\everyone.lua
 auras.lua
 cooldowns.lua
 tempenchants.lua
+spells.lua

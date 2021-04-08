@@ -121,10 +121,10 @@ Buff/Debuff settings:
 	desaturate = true,
 
 	---------------
-	-- Set the alpha values of your icons (transparency).
+	-- Set the alpha values of your icons (transparency) when found/notfound.
 	---------------
 	-- Debuffs and Buffs
-	alpha = {
+	peekAlpha = {
 		found = {
 			icon = 1, --buff/debuff was found
 		},
@@ -133,8 +133,26 @@ Buff/Debuff settings:
 		},
 	},
 
-	-- Set the types of GLOW you want
+	--sets the alpha when the Icon is active/inactive
+    alpha = {
+        active = 1, --default is 1
+        inactive = 0.4, --default is 0.4
+    },
 	
+	-- PostUpdateHook, apply additional logic to the buff/debuff after it has been processed.
+	-- Example:
+    PostUpdateHook = function(self)
+        local haveTotem, name, startTime, duration, icon = GetTotemInfo(1)
+        if haveTotem and name == 'Healing Stream Totem' then
+            local timeLeft = Round(startTime + duration - GetTime())
+            if timeLeft > 0 then
+                self.Icon:SetAlpha(1)
+                self.Icon.Duration:SetText(timeLeft)
+            end
+        end
+    end,
+	
+	-- Set the types of GLOW you want
 	glowOverlay = {
 		shineType = 'Blizzard',
 		reqAlpha = 0, --required alpha level to show, default is zero
@@ -190,6 +208,7 @@ Cooldown settings:
 ```lua
 {
 	cdType = 'spell', --cooldown types can be 'spell' or 'item', when using 'item' provide the itemID as the rootSpellID
+	cdType = 'item', --make sure to provide the itemID, its used for both the cooldown grab and the icon texture
 	
 	-- The talent tree you want to track the spell (nil will make it work in
 	-- any tree).  
@@ -221,10 +240,10 @@ Cooldown settings:
 	globalCooldown = 1.5, --default is off, however most spells and classes use a 1.5 global cooldown.
 	
 	---------------
-	-- Set the alpha values of your icons (transparency).
+	-- Set the alpha values of your icons (transparency) when on or not on cooldown
 	---------------
 	-- Cooldowns
-	alpha = {
+	peekAlpha = {
 		cooldown = {
 			icon = 0.6, --spell on cooldown
 		},
@@ -233,8 +252,26 @@ Cooldown settings:
 		},
 	}
 	
-	-- Set the types of GLOW you want
+	--sets the alpha when the Icon is active/inactive
+    alpha = {
+        active = 1, --default is 1
+        inactive = 0.4, --default is 0.4
+    },
 	
+	-- PostUpdateHook, apply additional logic to the buff/debuff after it has been processed.
+	-- Example:
+    PostUpdateHook = function(self)
+        local haveTotem, name, startTime, duration, icon = GetTotemInfo(1)
+        if haveTotem and name == 'Healing Stream Totem' then
+            local timeLeft = Round(startTime + duration - GetTime())
+            if timeLeft > 0 then
+                self.Icon:SetAlpha(1)
+                self.Icon.Duration:SetText(timeLeft)
+            end
+        end
+    end,
+	
+	-- Set the types of GLOW you want
 	glowOverlay = {
 		shineType = 'Blizzard',
 		reqAlpha = 0, --required alpha level to show, default is zero
@@ -317,10 +354,10 @@ Temporary Enchant settings:
 	desaturate = true,
 
 	---------------
-	-- Set the alpha values of your icons (transparency).
+	-- Set the alpha values of your icons (transparency) when found or notfound
 	---------------
 	-- Cooldowns
-	alpha = {
+	peekAlpha = {
 		found = {
 			icon = 1, --enchant was found
 		},
@@ -329,8 +366,26 @@ Temporary Enchant settings:
 		},
 	},
 	
-	-- Set the types of GLOW you want
+	--sets the alpha when the Icon is active/inactive
+    alpha = {
+        active = 1, --default is 1
+        inactive = 0.4, --default is 0.4
+    },
 	
+	-- PostUpdateHook, apply additional logic to the buff/debuff after it has been processed.
+	-- Example:
+    PostUpdateHook = function(self)
+        local haveTotem, name, startTime, duration, icon = GetTotemInfo(1)
+        if haveTotem and name == 'Healing Stream Totem' then
+            local timeLeft = Round(startTime + duration - GetTime())
+            if timeLeft > 0 then
+                self.Icon:SetAlpha(1)
+                self.Icon.Duration:SetText(timeLeft)
+            end
+        end
+    end,
+	
+	-- Set the types of GLOW you want
 	glowOverlay = {
 		shineType = 'Blizzard',
 		reqAlpha = 0, --required alpha level to show, default is zero

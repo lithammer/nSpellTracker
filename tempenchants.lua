@@ -5,32 +5,32 @@ local LibGlow = LibStub("LibCustomGlow-1.0")
 local decimalThreshold = 3
 
 local function Round(num, idp)
-    local mult = 10^(idp or 0)
-    return math.floor(num * mult + 0.5) / mult
+	local mult = 10^(idp or 0)
+	return math.floor(num * mult + 0.5) / mult
 end
 
 local function GetAlpha(self, duration, hasEnchant)
-    local alpha = self.alpha.active
-
-    if duration == 0 then
-        alpha = self.alpha.inactive
-    end
-
-    if self.hideOutOfCombat and not InCombatLockdown() then
-        alpha = 0
-    end
-
-	if self.alpha then
-		if self.alpha.notFound and not hasEnchant then
+	local alpha = self.alpha.active
+	
+	if duration == 0 then
+		alpha = self.alpha.inactive
+	end
+	
+	if self.hideOutOfCombat and not InCombatLockdown() then
+		alpha = 0
+	end
+	
+	if self.peekAlpha then
+		if self.peekAlpha.notFound and not hasEnchant then
 			--enchant not found
-			alpha = self.alpha.notFound.icon or alpha
-		elseif self.alpha.found and hasEnchant then
+			alpha = self.peekAlpha.notFound.icon or alpha
+		elseif self.peekAlpha.found and hasEnchant then
 			--enchant found
-			alpha = self.alpha.found.icon or alpha
+			alpha = self.peekAlpha.found.icon or alpha
 		end
 	end
 	
-    return alpha
+	return alpha
 end
 
 local function SetGlow(self, alpha)
@@ -93,56 +93,56 @@ local function UpdateTempEnchant(self)
 		hasEnchant = true
 		iconTexture = GetInventoryItemTexture("player", GetInventorySlotInfo("SecondaryHandSlot"))
 	end
-
-    if duration and duration > 0 and duration < decimalThreshold then
-        self.Icon.Duration:SetTextColor(1, 0, 0, 1)
-    else
-        self.Icon.Duration:SetTextColor(1, 1, 1, 1)
-    end
-
-    local durationText = ''
-    if duration and duration > 0 then
+	
+	if duration and duration > 0 and duration < decimalThreshold then
+		self.Icon.Duration:SetTextColor(1, 0, 0, 1)
+	else
+		self.Icon.Duration:SetTextColor(1, 1, 1, 1)
+	end
+	
+	local durationText = ''
+	if duration and duration > 0 then
 		durationText = (duration == math.huge) and 'Inf' or duration
-    end
-    self.Icon.Duration:SetText(addon:GetTimeText(durationText))
-
-    if self.desaturate then
+	end
+	self.Icon.Duration:SetText(addon:GetTimeText(durationText))
+	
+	if self.desaturate then
 		self.Icon.Texture:SetDesaturated(not durationText)
-    end
+	end
 	
 	if not self.iconTexture and iconTexture and iconTexture ~= self.Icon.Texture:GetTexture() then
 		self.Icon.Texture:SetTexture(iconTexture)
 	end
 	
-    local alpha = GetAlpha(self, duration, hasEnchant)
-    self.Icon:SetAlpha(alpha)
+	local alpha = GetAlpha(self, duration, hasEnchant)
+	self.Icon:SetAlpha(alpha)
 	
 	SetGlow(self, alpha)
 	
-    if duration and self.PostUpdateHook then
-        self:PostUpdateHook()
-    end
+	if duration and self.PostUpdateHook then
+		self:PostUpdateHook()
+	end
 	
 end
 
 local function ScanTempEnchants()
-    for _, self in pairs(addon.tempenchants) do
-        if self:IsCurrentSpec() then
-            UpdateTempEnchant(self)
-        else
-            self.Icon:SetAlpha(0)
-        end
-    end
+	for _, self in pairs(addon.tempenchants) do
+		if self:IsCurrentSpec() then
+			UpdateTempEnchant(self)
+		else
+			self.Icon:SetAlpha(0)
+		end
+	end
 end
 
 addon.ScanTempEnchants = ScanTempEnchants
 
 
-	
-		--this is for spell usable
-		
-          -- (IsUsableSpell(state.spellname) 
 
-          -- "SPELL_UPDATE_USABLE",
-          -- "PLAYER_TARGET_CHANGED",
-          -- "UNIT_POWER_FREQUENT",
+--this is for spell usable
+
+-- (IsUsableSpell(state.spellname) 
+
+-- "SPELL_UPDATE_USABLE",
+-- "PLAYER_TARGET_CHANGED",
+-- "UNIT_POWER_FREQUENT",

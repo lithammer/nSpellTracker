@@ -7,6 +7,10 @@ if addon.playerClass ~= 'MAGE' then return end
 	-- size = 50,
 	-- visibilityState = '[petbattle] [vehicleui] hide; show',
 	-- hideOutOfCombat = false,
+    -- alpha = {
+        -- active = 1,
+        -- inactive = 0,
+    -- },
 	-- glowOverlay = {
 		-- shineType = 'PixelGlow',
 		-- reqAlpha = 0.5, --required alpha level to show, default is zero
