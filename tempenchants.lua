@@ -16,10 +16,6 @@ local function GetAlpha(self, duration, hasEnchant)
 		alpha = self.alpha.inactive
 	end
 	
-	if self.hideOutOfCombat and not InCombatLockdown() then
-		alpha = 0
-	end
-	
 	if self.peekAlpha then
 		if self.peekAlpha.notFound and not hasEnchant then
 			--enchant not found
@@ -30,7 +26,11 @@ local function GetAlpha(self, duration, hasEnchant)
 		end
 	end
 	
-	return alpha
+	if self.hideOutOfCombat and not InCombatLockdown() then
+		alpha = 0
+	end
+	
+	return alpha or 0
 end
 
 local function SetGlow(self, alpha)
@@ -136,13 +136,3 @@ local function ScanTempEnchants()
 end
 
 addon.ScanTempEnchants = ScanTempEnchants
-
-
-
---this is for spell usable
-
--- (IsUsableSpell(state.spellname) 
-
--- "SPELL_UPDATE_USABLE",
--- "PLAYER_TARGET_CHANGED",
--- "UNIT_POWER_FREQUENT",

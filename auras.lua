@@ -34,14 +34,6 @@ local function GetAlpha(self, duration, caster, auraName, spellID)
 		alpha = self.alpha.inactive
 	end
 	
-	if self.hideOutOfCombat and not InCombatLockdown() then
-		alpha = 0
-	end
-	
-	if self.verifySpell and spellID and not FindSpellBookSlotBySpellID(spellID) then
-		alpha = 0
-	end
-	
 	if self.peekAlpha then
 		if self.peekAlpha.notFound and not auraName then
 			--aura not found
@@ -52,7 +44,15 @@ local function GetAlpha(self, duration, caster, auraName, spellID)
 		end
 	end
 	
-	return alpha
+	if self.hideOutOfCombat and not InCombatLockdown() then
+		alpha = 0
+	end
+	
+	if self.verifySpell and spellID and not FindSpellBookSlotBySpellID(spellID) then
+		alpha = 0
+	end
+	
+	return alpha or 0
 end
 
 local function SetGlow(self, alpha)

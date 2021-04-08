@@ -95,13 +95,22 @@ end
 
 function addon:TempEnchant(spellID, config)
 	local tmpEnch = TrackSpell(spellID, nil)
-	-- cd.desaturate = true
 	tmpEnch.rootSpellID = spellID
 	UpdateConfig(tmpEnch, config)
 	--overwrite, we don't want to use multiple spellID's
 	tmpEnch.spellID = spellID
 	CreateIcon(tmpEnch, self.tempenchants)
 	table.insert(self.tempenchants, tmpEnch)
+end
+
+function addon:Spell(spellID, config)
+	local spell = TrackSpell(spellID, nil)
+	spell.rootSpellID = spellID
+	UpdateConfig(spell, config)
+	--overwrite, we don't want to use multiple spellID's
+	spell.spellID = spellID
+	CreateIcon(spell, self.spells)
+	table.insert(self.spells, spell)
 end
 
 -- Private
@@ -239,5 +248,6 @@ events:SetScript('OnUpdate', function(self, elapsed)
 		self.delta = self.delta - cfg.refreshInterval
 		if addon.ScanAuras then addon.ScanAuras() end
 		if addon.ScanTempEnchants then addon.ScanTempEnchants() end
+		if addon.ScanSpells then addon.ScanSpells() end
 	end
 end)

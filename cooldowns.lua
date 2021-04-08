@@ -12,10 +12,6 @@ local function GetAlpha(self, duration)
 		alpha = self.alpha.active
 	end
 	
-	if self.hideOutOfCombat and not InCombatLockdown() then
-		alpha = 0
-	end
-	
 	if self.peekAlpha then
 		if self.peekAlpha.notCooldown and self.Icon.Cooldown:GetCooldownDuration() <= 0 then
 			--spell not on cooldown
@@ -26,7 +22,11 @@ local function GetAlpha(self, duration)
 		end
 	end
 	
-	return alpha
+	if self.hideOutOfCombat and not InCombatLockdown() then
+		alpha = 0
+	end
+	
+	return alpha or 0
 end
 
 local function SetGlow(self, alpha)
