@@ -148,7 +148,7 @@ local function UpdateAura(self)
         self.Icon.Count:SetText()
     end
 
-    if icon and icon ~= self.Icon.Texture:GetTexture() then
+    if not self.iconTexture and icon and icon ~= self.Icon.Texture:GetTexture() then
         self.Icon.Texture:SetTexture(icon)
     end
 

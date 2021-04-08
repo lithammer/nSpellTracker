@@ -2,6 +2,9 @@ local _, addon = ...
 
 addon.auras = {}
 addon.cooldowns = {}
+addon.tempenchants = {}
+addon.spells = {}
+
 addon.playerClass = select(2, UnitClass('player'))
 
 addon.cfg = addon.cfg or {
@@ -19,8 +22,23 @@ local CreateIcon, TrackSpell, UpdateConfig
 
 -- Public methods
 
+local function IsNumeric(data)
+    if type(data) == "number" then
+        return true
+    elseif type(data) ~= "string" then
+        return false
+    end
+    data = strtrim(data)
+    local x, y = string.find(data, "[%d+][%.?][%d*]")
+    if x and x == 1 and y == strlen(data) then
+        return true
+    end
+	if strmatch(data,"%d") then return true end
+    return false
+end
+
 function addon:GetTimeText(timeLeft)
-	if not tonumber(timeLeft) then return timeLeft end
+	if not IsNumeric(timeLeft) then return timeLeft end
 	
 	local hours, minutes, seconds = 0, 0, 0
 	if( timeLeft >= 3600 ) then
@@ -50,7 +68,7 @@ function addon:Buff(spellID, config)
     local aura = TrackSpell(spellID, 'HELPFUL')
 	aura.rootSpellID = spellID
     UpdateConfig(aura, config)
-    CreateIcon(aura)
+    CreateIcon(aura, self.auras)
     table.insert(self.auras, aura)
 end
 
@@ -59,7 +77,7 @@ function addon:Debuff(spellID, config)
     aura.unit = 'target'
 	aura.rootSpellID = spellID
     UpdateConfig(aura, config)
-    CreateIcon(aura)
+    CreateIcon(aura, self.auras)
     table.insert(self.auras, aura)
 end
 
@@ -71,8 +89,19 @@ function addon:Cooldown(spellID, config)
     UpdateConfig(cd, config)
 	--overwrite, we don't want to use multiple spellID's
 	cd.spellID = spellID
-    CreateIcon(cd)
+    CreateIcon(cd, self.cooldowns)
     table.insert(self.cooldowns, cd)
+end
+
+function addon:TempEnchant(spellID, config)
+    local tmpEnch = TrackSpell(spellID, nil)
+    -- cd.desaturate = true
+	tmpEnch.rootSpellID = spellID
+    UpdateConfig(tmpEnch, config)
+	--overwrite, we don't want to use multiple spellID's
+	tmpEnch.spellID = spellID
+    CreateIcon(tmpEnch, self.tempenchants)
+    table.insert(self.tempenchants, tmpEnch)
 end
 
 -- Private
@@ -131,14 +160,14 @@ UpdateConfig = function(old, new)
     end
 end
 
-local function GetFrameName(spellID)
-    return string.format('%s%s%s', 'nSpellTracker', #addon.auras, spellID)
+local function GetFrameName(spellID, addonTbl)
+    return string.format('%s%s%s', 'nSpellTracker', #addonTbl, spellID)
 end
 
-CreateIcon = function(self)
+CreateIcon = function(self, addonTbl)
     local _, _, iconTexture = GetSpellInfo(self.rootSpellID)
 
-    self.Icon = CreateFrame('Frame', GetFrameName(self.rootSpellID), UIParent, 'SecureHandlerStateTemplate')
+    self.Icon = CreateFrame('Frame', GetFrameName(self.rootSpellID, addonTbl), UIParent, 'SecureHandlerStateTemplate')
     self.Icon:SetPoint(unpack(self.position))
     self.Icon:SetSize(self.size, self.size)
     self.Icon:SetAlpha(0)
@@ -161,7 +190,7 @@ CreateIcon = function(self)
     -- Create texture
     local texture = self.Icon:CreateTexture('$parentTexture', 'BACKGROUND', nil, -6)
     texture:SetAllPoints(self.Icon)
-    texture:SetTexture(iconTexture)
+    texture:SetTexture(self.iconTexture or iconTexture or 135986) --135986 = seal of wrath
     self.Icon.Texture = texture
 
     -- Create border glow
@@ -204,5 +233,6 @@ events:SetScript('OnUpdate', function(self, elapsed)
         self.delta = self.delta - cfg.refreshInterval
         if addon.ScanAuras then addon.ScanAuras() end
 		if addon.ScanCooldowns then addon.ScanCooldowns() end
+		if addon.ScanTempEnchants then addon.ScanTempEnchants() end
     end
 end)

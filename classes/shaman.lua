@@ -7,7 +7,6 @@ addon:Buff(192106, {
 	size = 50,
 	hideOutOfCombat = false,
 	visibilityState = '[petbattle] [vehicleui] hide; show',
-	spellID = {546},
 	alpha = {
 		found = {
 			icon = 0,
@@ -27,6 +26,34 @@ addon:Buff(192106, {
 		yOffset = 0, --- offset of glow relative to region border;
 	},
 })
+
+--Flametongue Weapon
+addon:TempEnchant(5400, {
+    position = {'CENTER', 'UIParent', 'CENTER', 100, 80},
+	size = 50,
+	hideOutOfCombat = false,
+	iconTexture = 135814,
+	visibilityState = '[petbattle] [vehicleui] hide; show',
+	alpha = {
+		found = {
+			icon = 0,
+		},
+		notFound = {
+			icon = 1,
+		},
+	},
+	glowOverlay = {
+		shineType = 'AutoCastGlow',
+		reqAlpha = 0.5, --required alpha level to show, default is zero
+		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		numParticle = 8, --default is 8, number of particles to show
+		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
+		particleScale = 1, --scale of the particles, default is 1
+		xOffset = 0, --- offset of glow relative to region border;
+		yOffset = 0, --- offset of glow relative to region border;
+	},
+})
+
 
 -- addon:Cooldown(5394, {
 	-- cdType = 'spell',
