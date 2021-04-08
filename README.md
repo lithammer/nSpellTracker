@@ -48,10 +48,10 @@ addon:Buff(rootSpellID, {
 })
 ```
 
-NOTE: Please note that the buff/debuff duration will be grabbed from the first spellID that matches, if a spellID table is used.  So it may not match exactly with the duration for the rootSpellID.
+NOTE: Please note that the buff/debuff duration will be grabbed from the first spellID that matches, if a spellID table is used. So it may not match exactly with the duration for the rootSpellID.
 
 
-## Buff/Debuff Settings
+## Buff/Debuff
 
 ```lua
 addon:Buff(rootSpellID, {
@@ -82,44 +82,44 @@ Buff/Debuff settings:
 ```lua
 {
 	-- The talent tree you want to track the spell (nil will make it work in
-	-- any tree).  
+	-- any tree). 
 	spec = nil, -- you can use a table as well, like {1,3} for specs 1 and 3
-
+	
 	-- Attribute that lets you show/hide the frame on a given state condition.
 	-- example: '[stance:2] show; hide'
 	visibilityState = '[petbattle] hide; show',
-
-	-- The spellid to track this will represent the icon to be used.  If no spellID is given then the rootSpellID is used.
+	
+	-- The spellid to track this will represent the icon to be used. If no spellID is given then the rootSpellID is used.
 	spellID = 469, -- a table can be used as well {12345, 435, 2586674} the first spellID that matches will be used. 
 	spellID = {12345, 435, 2586674}, -- a table can be used as well, the first spellID that matches will be used. This table will always include the rootSpellID.
 	
 	-- The size of the icon.
 	size = 26,
 	
-	--use a custom iconTexture instead of the one from the spellID.  Use fileID numbers for iconTexture
+	--use a custom iconTexture instead of the one from the spellID. Use fileID numbers for iconTexture
 	iconTexture = 12345,
-
+	
 	-- The position of the icon (http://www.wowwiki.com/API_Region_SetPoint).
 	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
-
+	
 	--Unit ID (http://www.wowwiki.com/UnitId), the unit that should be tracked.
 	unit = 'player',
-
+	
 	-- Only show the icon if unit is found.
 	validateUnit = true,
-
+	
 	-- Hide icon out of combat.
 	hideOutOfCombat = true,
-
+	
 	-- Hide if the buff/debuff isn't mine.
 	isMine = false,
 	
 	--verify if the spellID is in our spellbook
 	verifySpell = true,
-
+	
 	-- Desaturate the icon if not found.
 	desaturate = true,
-
+	
 	---------------
 	-- Set the alpha values of your icons (transparency) when found/notfound.
 	---------------
@@ -132,49 +132,49 @@ Buff/Debuff settings:
 			icon = 0.6, --buff/debuff was not found
 		},
 	},
-
+	
 	--sets the alpha when the Icon is active/inactive
-    alpha = {
-        active = 1, --default is 1
-        inactive = 0.4, --default is 0.4
-    },
+	alpha = {
+		active = 1, --default is 1
+		inactive = 0.4, --default is 0.4
+	},
 	
 	-- PostUpdateHook, apply additional logic to the buff/debuff after it has been processed.
 	-- Example:
-    PostUpdateHook = function(self)
-        local haveTotem, name, startTime, duration, icon = GetTotemInfo(1)
-        if haveTotem and name == 'Healing Stream Totem' then
-            local timeLeft = Round(startTime + duration - GetTime())
-            if timeLeft > 0 then
-                self.Icon:SetAlpha(1)
-                self.Icon.Duration:SetText(timeLeft)
-            end
-        end
-    end,
+	PostUpdateHook = function(self)
+		local haveTotem, name, startTime, duration, icon = GetTotemInfo(1)
+		if haveTotem and name == 'Healing Stream Totem' then
+			local timeLeft = Round(startTime + duration - GetTime())
+			if timeLeft > 0 then
+				self.Icon:SetAlpha(1)
+				self.Icon.Duration:SetText(timeLeft)
+			end
+		end
+	end,
 	
 	-- Set the types of GLOW you want
 	glowOverlay = {
 		shineType = 'Blizzard',
 		reqAlpha = 0, --required alpha level to show, default is zero
-		color = {r,g,b,a}, --  Default value is {0.95, 0.95, 0.32, 1}
-		frequency = 0.125, --  Default value is 0.125
+		color = {r,g,b,a}, -- Default value is {0.95, 0.95, 0.32, 1}
+		frequency = 0.125, -- Default value is 0.125
 	},
 	glowOverlay = {
 		shineType = 'PixelGlow',
 		reqAlpha = 0.5, --required alpha level to show, default is zero
-		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		color = {242, 5/255, 5/255, 1}, -- Default value is {0.95, 0.95, 0.32, 1}
 		numLines = 8, --default is 8
 		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
 		lineLength = nil, --length of lines, common is 10-15. Default = nil, will set line length depending on dimensions of glow frame
 		lineThickness = 2, --line thickness, default value is 1
 		xOffset = 0, --- offset of glow relative to region border;
 		yOffset = 0, --- offset of glow relative to region border;
-		border = false,  -- set to true to create border under lines;
+		border = false, -- set to true to create border under lines;
 	},
 	glowOverlay = {
 		shineType = 'AutoCastGlow',
 		reqAlpha = 0.5, --required alpha level to show, default is zero
-		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		color = {242, 5/255, 5/255, 1}, -- Default value is {0.95, 0.95, 0.32, 1}
 		numParticle = 8, --default is 8, number of particles to show
 		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
 		particleScale = 1, --scale of the particles, default is 1
@@ -184,7 +184,7 @@ Buff/Debuff settings:
 	glowOverlay = {
 		shineType = 'ButtonGlow',
 		reqAlpha = 0.5, --required alpha level to show, default is zero
-		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		color = {242, 5/255, 5/255, 1}, -- Default value is {0.95, 0.95, 0.32, 1}
 		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
 	},
 	
@@ -211,32 +211,32 @@ Cooldown settings:
 	cdType = 'item', --make sure to provide the itemID, its used for both the cooldown grab and the icon texture
 	
 	-- The talent tree you want to track the spell (nil will make it work in
-	-- any tree).  
+	-- any tree). 
 	spec = nil, -- you can use a table as well, like {1,3} for specs 1 and 3
-
+	
 	-- Attribute that lets you show/hide the frame on a given state condition.
 	-- example: '[stance:2] show; hide'
 	visibilityState = '[petbattle] hide; show',
-
+	
 	-- The size of the icon.
 	size = 26,
-
-	--use a custom iconTexture instead of the one from the spellID.  Use fileID numbers for iconTexture
+	
+	--use a custom iconTexture instead of the one from the spellID. Use fileID numbers for iconTexture
 	iconTexture = 12345,
 	
 	-- The position of the icon (http://www.wowwiki.com/API_Region_SetPoint).
 	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
-
+	
 	-- Hide icon out of combat.
 	hideOutOfCombat = true,
-
+	
 	-- Desaturate the icon if not found.
 	desaturate = true,
-
+	
 	--verify if the spellID is in our spellbook
 	verifySpell = false,
 	
-	--add a global cooldown to check in duration.  By default this is turned off.  However you can override if you want.
+	--add a global cooldown to check in duration. By default this is turned off. However you can override if you want.
 	globalCooldown = 1.5, --default is off, however most spells and classes use a 1.5 global cooldown.
 	
 	---------------
@@ -253,47 +253,47 @@ Cooldown settings:
 	}
 	
 	--sets the alpha when the Icon is active/inactive
-    alpha = {
-        active = 1, --default is 1
-        inactive = 0.4, --default is 0.4
-    },
+	alpha = {
+		active = 1, --default is 1
+		inactive = 0.4, --default is 0.4
+	},
 	
 	-- PostUpdateHook, apply additional logic to the buff/debuff after it has been processed.
 	-- Example:
-    PostUpdateHook = function(self)
-        local haveTotem, name, startTime, duration, icon = GetTotemInfo(1)
-        if haveTotem and name == 'Healing Stream Totem' then
-            local timeLeft = Round(startTime + duration - GetTime())
-            if timeLeft > 0 then
-                self.Icon:SetAlpha(1)
-                self.Icon.Duration:SetText(timeLeft)
-            end
-        end
-    end,
+	PostUpdateHook = function(self)
+		local haveTotem, name, startTime, duration, icon = GetTotemInfo(1)
+		if haveTotem and name == 'Healing Stream Totem' then
+			local timeLeft = Round(startTime + duration - GetTime())
+			if timeLeft > 0 then
+				self.Icon:SetAlpha(1)
+				self.Icon.Duration:SetText(timeLeft)
+			end
+		end
+	end,
 	
 	-- Set the types of GLOW you want
 	glowOverlay = {
 		shineType = 'Blizzard',
 		reqAlpha = 0, --required alpha level to show, default is zero
-		color = {r,g,b,a}, --  Default value is {0.95, 0.95, 0.32, 1}
-		frequency = 0.125, --  Default value is 0.125
+		color = {r,g,b,a}, -- Default value is {0.95, 0.95, 0.32, 1}
+		frequency = 0.125, -- Default value is 0.125
 	},
 	glowOverlay = {
 		shineType = 'PixelGlow',
 		reqAlpha = 0.5, --required alpha level to show, default is zero
-		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		color = {242, 5/255, 5/255, 1}, -- Default value is {0.95, 0.95, 0.32, 1}
 		numLines = 8, --default is 8
 		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
 		lineLength = nil, --length of lines, common is 10-15. Default = nil, will set line length depending on dimensions of glow frame
 		lineThickness = 2, --line thickness, default value is 1
 		xOffset = 0, --- offset of glow relative to region border;
 		yOffset = 0, --- offset of glow relative to region border;
-		border = false,  -- set to true to create border under lines;
+		border = false, -- set to true to create border under lines;
 	},
 	glowOverlay = {
 		shineType = 'AutoCastGlow',
 		reqAlpha = 0.5, --required alpha level to show, default is zero
-		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		color = {242, 5/255, 5/255, 1}, -- Default value is {0.95, 0.95, 0.32, 1}
 		numParticle = 8, --default is 8, number of particles to show
 		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
 		particleScale = 1, --scale of the particles, default is 1
@@ -303,7 +303,7 @@ Cooldown settings:
 	glowOverlay = {
 		shineType = 'ButtonGlow',
 		reqAlpha = 0.5, --required alpha level to show, default is zero
-		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		color = {242, 5/255, 5/255, 1}, -- Default value is {0.95, 0.95, 0.32, 1}
 		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
 	},
 	
@@ -317,7 +317,7 @@ NOTE: rootSpellID is the enchantID from GetWeaponEnchantInfo()
 
 ```lua
 addon:TempEnchant(rootSpellID, {
-    position = {'CENTER', 'UIParent', 'CENTER', 100, 80},
+	position = {'CENTER', 'UIParent', 'CENTER', 100, 80},
 	size = 50,
 	hideOutOfCombat = false,
 	iconTexture = 135814,
@@ -329,30 +329,30 @@ Temporary Enchant settings:
 
 ```lua
 {
-
+	
 	-- The talent tree you want to track the spell (nil will make it work in
-	-- any tree).  
+	-- any tree). 
 	spec = nil, -- you can use a table as well, like {1,3} for specs 1 and 3
-
+	
 	-- Attribute that lets you show/hide the frame on a given state condition.
 	-- example: '[stance:2] show; hide'
 	visibilityState = '[petbattle] hide; show',
-
+	
 	-- The size of the icon.
 	size = 26,
-
+	
 	--use a custom iconTexture instead of the one from the temporary enchant item slot texture.
 	iconTexture = 12345,
 	
 	-- The position of the icon (http://www.wowwiki.com/API_Region_SetPoint).
 	position = {'CENTER', 'UIParent', 'CENTER', 150, 0},
-
+	
 	-- Hide icon out of combat.
 	hideOutOfCombat = true,
-
+	
 	-- Desaturate the icon if not found.
 	desaturate = true,
-
+	
 	---------------
 	-- Set the alpha values of your icons (transparency) when found or notfound
 	---------------
@@ -367,47 +367,47 @@ Temporary Enchant settings:
 	},
 	
 	--sets the alpha when the Icon is active/inactive
-    alpha = {
-        active = 1, --default is 1
-        inactive = 0.4, --default is 0.4
-    },
+	alpha = {
+		active = 1, --default is 1
+		inactive = 0.4, --default is 0.4
+	},
 	
 	-- PostUpdateHook, apply additional logic to the buff/debuff after it has been processed.
 	-- Example:
-    PostUpdateHook = function(self)
-        local haveTotem, name, startTime, duration, icon = GetTotemInfo(1)
-        if haveTotem and name == 'Healing Stream Totem' then
-            local timeLeft = Round(startTime + duration - GetTime())
-            if timeLeft > 0 then
-                self.Icon:SetAlpha(1)
-                self.Icon.Duration:SetText(timeLeft)
-            end
-        end
-    end,
+	PostUpdateHook = function(self)
+		local haveTotem, name, startTime, duration, icon = GetTotemInfo(1)
+		if haveTotem and name == 'Healing Stream Totem' then
+			local timeLeft = Round(startTime + duration - GetTime())
+			if timeLeft > 0 then
+				self.Icon:SetAlpha(1)
+				self.Icon.Duration:SetText(timeLeft)
+			end
+		end
+	end,
 	
 	-- Set the types of GLOW you want
 	glowOverlay = {
 		shineType = 'Blizzard',
 		reqAlpha = 0, --required alpha level to show, default is zero
-		color = {r,g,b,a}, --  Default value is {0.95, 0.95, 0.32, 1}
-		frequency = 0.125, --  Default value is 0.125
+		color = {r,g,b,a}, -- Default value is {0.95, 0.95, 0.32, 1}
+		frequency = 0.125, -- Default value is 0.125
 	},
 	glowOverlay = {
 		shineType = 'PixelGlow',
 		reqAlpha = 0.5, --required alpha level to show, default is zero
-		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		color = {242, 5/255, 5/255, 1}, -- Default value is {0.95, 0.95, 0.32, 1}
 		numLines = 8, --default is 8
 		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
 		lineLength = nil, --length of lines, common is 10-15. Default = nil, will set line length depending on dimensions of glow frame
 		lineThickness = 2, --line thickness, default value is 1
 		xOffset = 0, --- offset of glow relative to region border;
 		yOffset = 0, --- offset of glow relative to region border;
-		border = false,  -- set to true to create border under lines;
+		border = false, -- set to true to create border under lines;
 	},
 	glowOverlay = {
 		shineType = 'AutoCastGlow',
 		reqAlpha = 0.5, --required alpha level to show, default is zero
-		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		color = {242, 5/255, 5/255, 1}, -- Default value is {0.95, 0.95, 0.32, 1}
 		numParticle = 8, --default is 8, number of particles to show
 		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
 		particleScale = 1, --scale of the particles, default is 1
@@ -417,7 +417,7 @@ Temporary Enchant settings:
 	glowOverlay = {
 		shineType = 'ButtonGlow',
 		reqAlpha = 0.5, --required alpha level to show, default is zero
-		color = {242, 5/255, 5/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		color = {242, 5/255, 5/255, 1}, -- Default value is {0.95, 0.95, 0.32, 1}
 		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
 	},
 	
