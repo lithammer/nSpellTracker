@@ -1,9 +1,6 @@
 local _, addon = ...
 local cfg = addon.cfg
 
-local LibGlow = LibStub("LibCustomGlow-1.0")
-local decimalThreshold = 3
-
 local function Round(num, idp)
 	local mult = 10^(idp or 0)
 	return math.floor(num * mult + 0.5) / mult
@@ -19,7 +16,7 @@ local function CalculateDuration(expires)
 		return math.huge
 	end
 	
-	local idp = (duration < decimalThreshold) and 1 or 0
+	local idp = (duration < cfg.decimalThreshold) and 1 or 0
 	return Round(duration, idp)
 end
 
@@ -55,47 +52,6 @@ local function GetAlpha(self, duration, caster, auraName, spellID)
 	return alpha or 0
 end
 
-local function SetGlow(self, alpha)
-	if not self.glowOverlay then return end
-	if not alpha then return end
-	
-	local reqAlpha = self.glowOverlay.reqAlpha or 0
-	local shineType = self.glowOverlay.shineType or 'Blizzard'
-	
-	local switch = false
-	if reqAlpha > 0 and alpha >= reqAlpha then switch = true end
-	if reqAlpha == 0 and alpha > reqAlpha then switch = true end --only display by default if we have alpha greather than zero
-	
-	if shineType == 'Blizzard' then
-		if switch then
-			ActionButton_ShowOverlayGlow(self.Icon)
-		else
-			ActionButton_HideOverlayGlow(self.Icon)
-		end
-	elseif shineType == 'PixelGlow' then
-		local opt = self.glowOverlay
-		if switch then
-			LibGlow.PixelGlow_Start(self.Icon, opt.color, opt.numLines, opt.frequency, opt.lineLength, opt.lineThickness, opt.xOffset, opt.yOffset, opt.border)
-		else
-			LibGlow.PixelGlow_Stop(self.Icon, nil)
-		end
-	elseif shineType == 'AutoCastGlow' then
-		local opt = self.glowOverlay
-		if switch then
-			LibGlow.AutoCastGlow_Start(self.Icon, opt.color, opt.numParticle, opt.frequency, opt.particleScale, opt.xOffset, opt.yOffset)
-		else
-			LibGlow.AutoCastGlow_Stop(self.Icon, nil)
-		end
-	elseif shineType == 'ButtonGlow' then
-		local opt = self.glowOverlay
-		if switch then
-			LibGlow.ButtonGlow_Start(self.Icon, opt.color, opt.frequency)
-		else
-			LibGlow.ButtonGlow_Stop(self.Icon, nil)
-		end
-	end
-end
-
 local function UpdateAura(self)
 	if not self.spellID then return end
 	if self.validateUnit and not UnitExists(self.unit) then return end
@@ -126,7 +82,7 @@ local function UpdateAura(self)
 	if self.isMine and caster and caster ~= "player" then return end
 	
 	local duration = CalculateDuration(expires)
-	if duration and duration > 0 and duration < decimalThreshold then
+	if duration and duration > 0 and duration < cfg.decimalThreshold then
 		self.Icon.Duration:SetTextColor(1, 0, 0, 1)
 	else
 		self.Icon.Duration:SetTextColor(1, 1, 1, 1)
@@ -165,7 +121,7 @@ local function UpdateAura(self)
 	local alpha = GetAlpha(self, duration, caster, name, spID)
 	self.Icon:SetAlpha(alpha)
 	
-	SetGlow(self, alpha)
+	addon:SetGlow(self, alpha)
 	
 	if duration and self.PostUpdateHook then
 		self:PostUpdateHook()

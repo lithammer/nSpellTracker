@@ -10,6 +10,7 @@ addon.playerClass = select(2, UnitClass('player'))
 addon.cfg = addon.cfg or {
 	highlightPlayerSpells = false,
 	refreshInterval = 0.1,
+	decimalThreshold = 3,
 }
 
 local debugf = tekDebug and tekDebug:GetFrame("nSpellTracker")
@@ -19,6 +20,7 @@ end
 
 local cfg = addon.cfg
 local CreateIcon, TrackSpell, UpdateConfig
+local LibGlow = LibStub("LibCustomGlow-1.0")
 
 -- Public methods
 
@@ -61,6 +63,47 @@ function addon:GetTimeText(timeLeft)
 		return string.format("%ds", seconds)
 	else
 		return nil
+	end
+end
+
+function addon:SetGlow(self, alpha)
+	if not self.glowOverlay then return end
+	if not alpha then return end
+	
+	local reqAlpha = self.glowOverlay.reqAlpha or 0
+	local shineType = self.glowOverlay.shineType or 'Blizzard'
+	
+	local switch = false
+	if reqAlpha > 0 and alpha >= reqAlpha then switch = true end
+	if reqAlpha == 0 and alpha > reqAlpha then switch = true end --only display by default if we have alpha greather than zero
+	
+	if shineType == 'Blizzard' then
+		if switch then
+			ActionButton_ShowOverlayGlow(self.Icon)
+		else
+			ActionButton_HideOverlayGlow(self.Icon)
+		end
+	elseif shineType == 'PixelGlow' then
+		local opt = self.glowOverlay
+		if switch then
+			LibGlow.PixelGlow_Start(self.Icon, opt.color, opt.numLines, opt.frequency, opt.lineLength, opt.lineThickness, opt.xOffset, opt.yOffset, opt.border)
+		else
+			LibGlow.PixelGlow_Stop(self.Icon, nil)
+		end
+	elseif shineType == 'AutoCastGlow' then
+		local opt = self.glowOverlay
+		if switch then
+			LibGlow.AutoCastGlow_Start(self.Icon, opt.color, opt.numParticle, opt.frequency, opt.particleScale, opt.xOffset, opt.yOffset)
+		else
+			LibGlow.AutoCastGlow_Stop(self.Icon, nil)
+		end
+	elseif shineType == 'ButtonGlow' then
+		local opt = self.glowOverlay
+		if switch then
+			LibGlow.ButtonGlow_Start(self.Icon, opt.color, opt.frequency)
+		else
+			LibGlow.ButtonGlow_Stop(self.Icon, nil)
+		end
 	end
 end
 

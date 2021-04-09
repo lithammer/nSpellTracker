@@ -4,6 +4,7 @@
 addon.cfg = {
 	highlightPlayerSpells = true, -- Player spells will have a blue border
 	refreshInterval = 0.1, -- How fast to scan the auras (buff/debuffs)
+	decimalThreshold = 3, --how many decimal points to take into account for calculating durations for auras and tempenchants.  Default 3
 }
 ```
 

@@ -1,9 +1,6 @@
 local _, addon = ...
 local cfg = addon.cfg
 
-local LibGlow = LibStub("LibCustomGlow-1.0")
-local decimalThreshold = 3
-
 local function GetAlpha(self, spellID, isUsable)
 	local alpha = self.alpha.active
 
@@ -28,47 +25,6 @@ local function GetAlpha(self, spellID, isUsable)
 	return alpha or 0
 end
 
-local function SetGlow(self, alpha)
-	if not self.glowOverlay then return end
-	if not alpha then return end
-	
-	local reqAlpha = self.glowOverlay.reqAlpha or 0
-	local shineType = self.glowOverlay.shineType or 'Blizzard'
-	
-	local switch = false
-	if reqAlpha > 0 and alpha >= reqAlpha then switch = true end
-	if reqAlpha == 0 and alpha > reqAlpha then switch = true end --only display by default if we have alpha greather than zero
-	
-	if shineType == 'Blizzard' then
-		if switch then
-			ActionButton_ShowOverlayGlow(self.Icon)
-		else
-			ActionButton_HideOverlayGlow(self.Icon)
-		end
-	elseif shineType == 'PixelGlow' then
-		local opt = self.glowOverlay
-		if switch then
-			LibGlow.PixelGlow_Start(self.Icon, opt.color, opt.numLines, opt.frequency, opt.lineLength, opt.lineThickness, opt.xOffset, opt.yOffset, opt.border)
-		else
-			LibGlow.PixelGlow_Stop(self.Icon, nil)
-		end
-	elseif shineType == 'AutoCastGlow' then
-		local opt = self.glowOverlay
-		if switch then
-			LibGlow.AutoCastGlow_Start(self.Icon, opt.color, opt.numParticle, opt.frequency, opt.particleScale, opt.xOffset, opt.yOffset)
-		else
-			LibGlow.AutoCastGlow_Stop(self.Icon, nil)
-		end
-	elseif shineType == 'ButtonGlow' then
-		local opt = self.glowOverlay
-		if switch then
-			LibGlow.ButtonGlow_Start(self.Icon, opt.color, opt.frequency)
-		else
-			LibGlow.ButtonGlow_Stop(self.Icon, nil)
-		end
-	end
-end
-
 local function UpdateSpells(self)
 	if not self.spellID then return end
 	if self.validateUnit and not UnitExists(self.unit) then return end
@@ -87,7 +43,7 @@ local function UpdateSpells(self)
 	local alpha = GetAlpha(self, self.spellID, isUsable)
 	self.Icon:SetAlpha(alpha)
 	
-	SetGlow(self, alpha)
+	addon:SetGlow(self, alpha)
 	
 	if duration and self.PostUpdateHook then
 		self:PostUpdateHook()
