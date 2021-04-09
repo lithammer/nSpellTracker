@@ -467,6 +467,10 @@ Spell Tracking settings:
 	--verify if the spellID is in our spellbook
 	verifySpell = false,
 	
+	--a spell is technically usable because they meet the resource requirement, like chi, mana, rage, etc... but can be on cooldown.
+	--if you don't want to show a spell when it's usable but is on cooldown, then set showOnCooldown to false, the default is true.
+	showOnCooldown = false, --default is true
+	
 	---------------
 	-- Set the alpha values of your icons (transparency) when found or notfound
 	---------------

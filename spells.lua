@@ -18,6 +18,11 @@ local function GetAlpha(self, spellID, isUsable)
 		alpha = 0
 	end
 
+	if not self.showOnCooldown then
+		local start, duration, enable = GetSpellCooldown(spellID)
+		if (start and start > 0) or (duration and duration > 0) then alpha = 0 end
+	end
+	
 	if self.hideOutOfCombat and not InCombatLockdown() then
 		alpha = 0
 	end
