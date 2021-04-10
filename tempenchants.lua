@@ -27,7 +27,7 @@ local function GetAlpha(self, duration, hasEnchant)
 		alpha = 0
 	end
 	
-	return alpha or 0
+	return alpha
 end
 
 local function UpdateTempEnchant(self)

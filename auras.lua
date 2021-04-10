@@ -49,7 +49,7 @@ local function GetAlpha(self, duration, caster, auraName, spellID)
 		alpha = 0
 	end
 	
-	return alpha or 0
+	return alpha
 end
 
 local function UpdateAura(self)

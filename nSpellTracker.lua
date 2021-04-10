@@ -13,11 +13,6 @@ addon.cfg = addon.cfg or {
 	decimalThreshold = 3,
 }
 
-local debugf = tekDebug and tekDebug:GetFrame("nSpellTracker")
-function addon.Debug(...)
-	if debugf then debugf:AddMessage(string.join(", ", tostringall(...))) end
-end
-
 local cfg = addon.cfg
 local CreateIcon, TrackSpell, UpdateConfig
 local LibGlow = LibStub("LibCustomGlow-1.0")
@@ -149,6 +144,8 @@ end
 function addon:Spell(spellID, config)
 	local spell = TrackSpell(spellID, nil)
 	spell.rootSpellID = spellID
+	spell.showOnCooldown = true
+	spell.useGlobalCooldown = true
 	UpdateConfig(spell, config)
 	--overwrite, we don't want to use multiple spellID's
 	spell.spellID = spellID
@@ -291,6 +288,6 @@ events:SetScript('OnUpdate', function(self, elapsed)
 		self.delta = self.delta - cfg.refreshInterval
 		if addon.ScanAuras then addon.ScanAuras() end
 		if addon.ScanTempEnchants then addon.ScanTempEnchants() end
-		if addon.ScanSpells then addon.ScanSpells() end
+		--if addon.ScanSpells then addon.ScanSpells() end
 	end
 end)
