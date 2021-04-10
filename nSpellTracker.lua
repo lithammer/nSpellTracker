@@ -288,6 +288,6 @@ events:SetScript('OnUpdate', function(self, elapsed)
 		self.delta = self.delta - cfg.refreshInterval
 		if addon.ScanAuras then addon.ScanAuras() end
 		if addon.ScanTempEnchants then addon.ScanTempEnchants() end
-		--if addon.ScanSpells then addon.ScanSpells() end
+		if addon.ScanSpells then addon.ScanSpells() end
 	end
 end)

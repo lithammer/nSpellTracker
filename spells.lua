@@ -97,14 +97,4 @@ local function ScanSpells()
 	end
 end
 
---addon.ScanSpells = ScanSpells
-
-local events = CreateFrame('Frame')
-events:RegisterEvent('SPELL_UPDATE_USABLE')
-events:RegisterEvent('PLAYER_TARGET_CHANGED')
-events:RegisterEvent('RUNE_POWER_UPDATE')
-events:RegisterEvent('UNIT_POWER_FREQUENT')
-events:SetScript('OnEvent', function(self, event, ...)
-
-	ScanSpells()
-end)
+addon.ScanSpells = ScanSpells
