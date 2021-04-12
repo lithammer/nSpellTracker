@@ -35,19 +35,19 @@ local function UpdateTempEnchant(self)
 	if self.validateUnit and not UnitExists(self.unit) then return end
 	
 	local duration, iconTexture
-	local hasEnchant = false
+	local hasEnchant = true
 	local hasMainHandEnchant, mainHandExpiration, mainHandCharges, mainHandEnchantID, hasOffHandEnchant, offHandExpiration, offHandCharges, offHandEnchantID = GetWeaponEnchantInfo()
 	local mhExp = mainHandExpiration and (mainHandExpiration / 1000)
 	local ohExp = offHandExpiration and (offHandExpiration / 1000)
 	
 	if mainHandEnchantID and mainHandEnchantID == self.spellID then
 		duration = mhExp
-		hasEnchant = true
 		iconTexture = GetInventoryItemTexture("player", GetInventorySlotInfo("MainHandSlot"))
 	elseif offHandEnchantID and offHandEnchantID == self.spellID then
 		duration = ohExp
-		hasEnchant = true
 		iconTexture = GetInventoryItemTexture("player", GetInventorySlotInfo("SecondaryHandSlot"))
+	else
+		hasEnchant = false
 	end
 	
 	if duration and duration > 0 and duration < cfg.decimalThreshold then
