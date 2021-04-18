@@ -7,6 +7,34 @@ local elemental, enhancement, restoration = 1, 2, 3
 addon:Buff(192106, {
     position = {'CENTER', 'UIParent', 'CENTER', 200, 350},
 	size = 50,
+	spec = elemental,
+	hideOutOfCombat = false,
+	visibilityState = '[petbattle] [vehicleui] hide; show',
+	peekAlpha = {
+		found = {
+			icon = 0,
+		},
+		notFound = {
+			icon = 1,
+		},
+	},
+	glowOverlay = {
+		shineType = 'AutoCastGlow',
+		reqAlpha = 0.5, --required alpha level to show, default is zero
+		color = {0, 1, 118/255, 1}, --  Default value is {0.95, 0.95, 0.32, 1}
+		numParticle = 8, --default is 8, number of particles to show
+		frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
+		particleScale = 1, --scale of the particles, default is 1
+		xOffset = 0, --- offset of glow relative to region border;
+		yOffset = 0, --- offset of glow relative to region border;
+	},
+})
+
+-- Water Shield
+addon:Buff(52127, {
+    position = {'CENTER', 'UIParent', 'CENTER', 200, 350},
+	size = 50,
+	spec = restoration,
 	hideOutOfCombat = false,
 	visibilityState = '[petbattle] [vehicleui] hide; show',
 	peekAlpha = {
