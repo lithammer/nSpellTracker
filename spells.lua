@@ -1,7 +1,17 @@
 local _, addon = ...
 local cfg = addon.cfg
+local spellOverlayGlow = {}
 
 local function checkUsable(self, spellID)
+
+	--check our overlay if enabled before anything else
+	if self.showOnlyOnOverlayGlow then
+		if spellOverlayGlow[spellID] then
+			return true
+		end
+		return false
+	end
+	
 	local start, duration = GetSpellCooldown(spellID)
 	
 	--this is a dummy spell to check for global cooldown
@@ -40,6 +50,10 @@ end
 
 local function GetAlpha(self, spellID, isUsable)
 	local alpha = self.alpha.active
+	
+	if not isUsable then
+		alpha = self.alpha.inactive
+	end
 
 	if self.peekAlpha then
 		if self.peekAlpha.notUsable and not isUsable then
@@ -52,11 +66,11 @@ local function GetAlpha(self, spellID, isUsable)
 	end
 	
 	if self.verifySpell and spellID and not FindSpellBookSlotBySpellID(spellID) then
-		alpha = 0
+		alpha = self.alpha.inactive
 	end
 	
 	if self.hideOutOfCombat and not InCombatLockdown() then
-		alpha = 0
+		alpha = self.alpha.inactive
 	end
 	
 	return alpha
@@ -79,7 +93,7 @@ local function UpdateSpells(self)
 	
 	local alpha = GetAlpha(self, self.spellID, isUsable)
 	self.Icon:SetAlpha(alpha)
-	
+
 	addon:SetGlow(self, alpha)
 	
 	if duration and self.PostUpdateHook then
@@ -96,5 +110,19 @@ local function ScanSpells()
 		end
 	end
 end
+
+local events = CreateFrame("Frame")
+events:SetScript("OnEvent", function(self, event, spellID)
+	if not spellID then return end
+	
+	if event == "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW" then
+		spellOverlayGlow[spellID] = true
+	elseif event == "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE" then
+		spellOverlayGlow[spellID] = nil
+	end
+end)
+events:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
+events:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
+
 
 addon.ScanSpells = ScanSpells

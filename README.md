@@ -475,6 +475,10 @@ Spell Tracking settings:
 	--Only play with this setting if you know what you are doing. This setting works closely with showOnCooldown above.
 	useGlobalCooldown = true, --default is true
 	
+	--this option will show the spell icon ONLY when the spell itself has the spell activation overlay glow on it.  This is the yellow/gold glow that shows around a skill on the actionbars
+	--when a skill has a proc or has triggered an activation.  NOTE: This option will ignore all checks unless the spell in question has a glow overlay.
+	showOnlyOnOverlayGlow = false,
+	
 	---------------
 	-- Set the alpha values of your icons (transparency) when found or notfound
 	---------------

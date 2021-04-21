@@ -13,6 +13,10 @@ local function GetAlpha(self, duration, hasEnchant)
 		alpha = self.alpha.inactive
 	end
 	
+	if not hasEnchant then
+		alpha = self.alpha.inactive
+	end
+	
 	if self.peekAlpha then
 		if self.peekAlpha.notFound and not hasEnchant then
 			--enchant not found
