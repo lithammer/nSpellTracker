@@ -2,11 +2,10 @@ local _, addon = ...
 local cfg = addon.cfg
 
 local function GetAlpha(self, duration)
+	local alpha = self.alpha.active
 	
-	local alpha = self.alpha.inactive
-	
-	if self.Icon.Cooldown:GetCooldownDuration() > 0 then
-		alpha = self.alpha.active
+	if self.Icon.Cooldown:GetCooldownDuration() <= 0 then
+		alpha = self.alpha.inactive
 	end
 	
 	if self.peekAlpha then
@@ -20,7 +19,7 @@ local function GetAlpha(self, duration)
 	end
 	
 	if self.hideOutOfCombat and not InCombatLockdown() then
-		alpha = 0
+		alpha = self.alpha.inactive
 	end
 	
 	return alpha

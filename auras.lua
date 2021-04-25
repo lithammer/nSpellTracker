@@ -42,11 +42,11 @@ local function GetAlpha(self, duration, caster, auraName, spellID)
 	end
 	
 	if self.hideOutOfCombat and not InCombatLockdown() then
-		alpha = 0
+		alpha = self.alpha.inactive
 	end
 	
 	if self.verifySpell and spellID and not FindSpellBookSlotBySpellID(spellID) then
-		alpha = 0
+		alpha = self.alpha.inactive
 	end
 	
 	return alpha

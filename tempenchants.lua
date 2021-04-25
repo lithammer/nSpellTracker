@@ -28,7 +28,7 @@ local function GetAlpha(self, duration, hasEnchant)
 	end
 	
 	if self.hideOutOfCombat and not InCombatLockdown() then
-		alpha = 0
+		alpha = self.alpha.inactive
 	end
 	
 	return alpha
