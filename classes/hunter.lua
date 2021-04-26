@@ -7,6 +7,7 @@ addon:Spell(53351, {
 	size = 50,
 	hideOutOfCombat = false,
 	visibilityState = '[petbattle] [vehicleui] hide; show',
+	showOnCooldown = false,
 	alpha = {
 		active = 1, --default is 1
 		inactive = 0, --default is 0.4
