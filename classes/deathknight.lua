@@ -5,7 +5,7 @@ if addon.playerClass ~= 'DEATHKNIGHT' then return end
 addon:Spell(49998, {
     position = {'CENTER', 'UIParent', 'CENTER', -220, 210},
 	size = 50,
-	hideOutOfCombat = false,
+	hideOutOfCombat = true,
 	visibilityState = '[petbattle] [vehicleui] hide; show',
 	showOnlyOnOverlayGlow = true,
 	alpha = {
